@@ -4,7 +4,7 @@ export interface SubjectProgress {
   progress_percentage: number
 }
 
-export interface DashboardInsights {
+export interface Insights {
   current_streak: number
   longest_streak: number
   today_lessons_completed: number

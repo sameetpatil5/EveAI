@@ -1,11 +1,11 @@
-import { useDashboardInsightsQuery, useAIReportQuery } from '../insights.queries'
+import { useInsightsQuery, useAIReportQuery } from '../insights.queries'
 import StreakDisplay from '../components/StreakDisplay'
 import ProgressChart from '../components/ProgressChart'
 import QuizScoreChart from '../components/QuizScoreChart'
 import AIFeedbackCard from '../components/AIFeedbackCard'
 
 export default function InsightsPage() {
-  const insightsQ = useDashboardInsightsQuery()
+  const insightsQ = useInsightsQuery()
   const reportQ = useAIReportQuery()
 
   if (insightsQ.isLoading) {

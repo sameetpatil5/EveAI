@@ -1845,7 +1845,6 @@ DELETE /notes/{id}     → note_service.delete_note()  → 200
 Router prefix: `/insights`
 
 ```
-GET /insights/dashboard → insights_service.get_dashboard_insights() → 200
 GET /insights/report    → insights_service.get_ai_report()          → 200
 ```
 

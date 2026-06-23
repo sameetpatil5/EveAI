@@ -15,6 +15,7 @@ from app.api.schedule import router as schedule_router
 from app.api.chat import router as chat_router
 from app.api.notes import router as notes_router
 from app.api.insights import router as insights_router
+from app.api.dashboard import router as dashboard_router
 from app.api.profile import router as profile_router
 from app.api.state import router as state_router
 from app.core.config import settings
@@ -61,6 +62,7 @@ app.include_router(schedule_router)
 app.include_router(chat_router)
 app.include_router(notes_router)
 app.include_router(insights_router)
+app.include_router(dashboard_router)
 app.include_router(profile_router)
 app.include_router(state_router)
 

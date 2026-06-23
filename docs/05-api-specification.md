@@ -1353,7 +1353,7 @@ DELETE /notes/{note_id}
 ### 12.1 Get Dashboard Insights
 
 ```
-GET /insights/dashboard
+GET /dashboard
 ```
 
 **Auth:** Required
@@ -1519,45 +1519,45 @@ PUT /profile
 
 ## API Endpoint Summary
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | /auth/register | No | Register new user |
-| POST | /auth/login | No | Login |
-| GET | /auth/me | Yes | Get current user |
-| POST | /onboarding/academic | Yes | Save academic info |
-| POST | /onboarding/subjects | Yes | Save subjects |
-| POST | /onboarding/hobbies | Yes | Save hobbies |
-| POST | /onboarding/availability | Yes | Save availability |
-| POST | /onboarding/complete | Yes | Trigger AI setup |
-| GET | /jobs/{job_id} | Yes | Poll job status |
-| GET | /state | Yes | Get full user state |
-| GET | /subjects | Yes | List subjects |
-| GET | /subjects/{id} | Yes | Get subject |
-| POST | /subjects | Yes | Create subject |
-| PUT | /subjects/{id} | Yes | Update subject |
-| DELETE | /subjects/{id} | Yes | Delete subject |
-| GET | /courses/by-subject/{id} | Yes | Get course by subject |
-| GET | /courses/{id}/structure | Yes | Get course structure |
-| GET | /lessons/{id} | Yes | Get lesson (generate if needed) |
-| POST | /lessons/{id}/complete | Yes | Mark lesson complete |
-| GET | /lessons/next | Yes | Get next lesson |
-| POST | /quiz/generate/module | Yes | Generate module quiz |
-| POST | /quiz/generate/quick | Yes | Generate quick quiz |
-| POST | /quiz/{id}/submit | Yes | Submit quiz answers |
-| GET | /quiz/history | Yes | Get quiz history |
-| GET | /schedule | Yes | Get weekly schedule |
-| PATCH | /schedule/{id}/status | Yes | Update entry status |
-| POST | /schedule/regenerate | Yes | Regenerate schedule |
-| POST | /ai/tutor/chat | Yes | Tutor chat message |
-| POST | /ai/quick-ask | Yes | Quick ask question |
-| POST | /notes | Yes | Create note |
-| GET | /notes | Yes | List notes |
-| GET | /notes/{id} | Yes | Get note |
-| PUT | /notes/{id} | Yes | Update note |
-| DELETE | /notes/{id} | Yes | Delete note |
-| GET | /insights/dashboard | Yes | Dashboard analytics |
-| GET | /insights/report | Yes | AI insights report |
-| GET | /profile | Yes | Get full profile |
-| PUT | /profile | Yes | Update profile |
+| Method | Path                     | Auth | Description                     |
+| ------ | ------------------------ | ---- | ------------------------------- |
+| POST   | /auth/register           | No   | Register new user               |
+| POST   | /auth/login              | No   | Login                           |
+| GET    | /auth/me                 | Yes  | Get current user                |
+| POST   | /onboarding/academic     | Yes  | Save academic info              |
+| POST   | /onboarding/subjects     | Yes  | Save subjects                   |
+| POST   | /onboarding/hobbies      | Yes  | Save hobbies                    |
+| POST   | /onboarding/availability | Yes  | Save availability               |
+| POST   | /onboarding/complete     | Yes  | Trigger AI setup                |
+| GET    | /jobs/{job_id}           | Yes  | Poll job status                 |
+| GET    | /state                   | Yes  | Get full user state             |
+| GET    | /subjects                | Yes  | List subjects                   |
+| GET    | /subjects/{id}           | Yes  | Get subject                     |
+| POST   | /subjects                | Yes  | Create subject                  |
+| PUT    | /subjects/{id}           | Yes  | Update subject                  |
+| DELETE | /subjects/{id}           | Yes  | Delete subject                  |
+| GET    | /courses/by-subject/{id} | Yes  | Get course by subject           |
+| GET    | /courses/{id}/structure  | Yes  | Get course structure            |
+| GET    | /lessons/{id}            | Yes  | Get lesson (generate if needed) |
+| POST   | /lessons/{id}/complete   | Yes  | Mark lesson complete            |
+| GET    | /lessons/next            | Yes  | Get next lesson                 |
+| POST   | /quiz/generate/module    | Yes  | Generate module quiz            |
+| POST   | /quiz/generate/quick     | Yes  | Generate quick quiz             |
+| POST   | /quiz/{id}/submit        | Yes  | Submit quiz answers             |
+| GET    | /quiz/history            | Yes  | Get quiz history                |
+| GET    | /schedule                | Yes  | Get weekly schedule             |
+| PATCH  | /schedule/{id}/status    | Yes  | Update entry status             |
+| POST   | /schedule/regenerate     | Yes  | Regenerate schedule             |
+| POST   | /ai/tutor/chat           | Yes  | Tutor chat message              |
+| POST   | /ai/quick-ask            | Yes  | Quick ask question              |
+| POST   | /notes                   | Yes  | Create note                     |
+| GET    | /notes                   | Yes  | List notes                      |
+| GET    | /notes/{id}              | Yes  | Get note                        |
+| PUT    | /notes/{id}              | Yes  | Update note                     |
+| DELETE | /notes/{id}              | Yes  | Delete note                     |
+| GET    | /dashboard               | Yes  | Dashboard analytics             |
+| GET    | /insights/report         | Yes  | AI insights report              |
+| GET    | /profile                 | Yes  | Get full profile                |
+| PUT    | /profile                 | Yes  | Update profile                  |
 
 **Total endpoints: 38**
