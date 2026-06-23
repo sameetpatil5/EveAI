@@ -3,7 +3,7 @@ from typing import List
 
 from app.vectorstore.client import qdrant_client, LESSON_EMBEDDINGS
 from app.ai.base import get_embeddings
-from app.utils.helpers import chunk_text
+from app.utils.helpers import chunk_text, generate_deterministic_uuid
 
 
 class LessonVectorStore:
@@ -30,28 +30,44 @@ class LessonVectorStore:
                 "lesson_id": lesson_id,
                 "content_chunk": chunk,
             }
+
             points.append(
-                {"id": f"{lesson_id}_{i}", "vector": vector, "payload": payload}
+                {
+                    # NOTE: could improve later
+                    # "id": generate_deterministic_uuid(lesson_id, chunk)
+                    "id": generate_deterministic_uuid(lesson_id, str(i)),
+                    "vector": vector,
+                    "payload": payload,
+                }
             )
 
         # Try a few common Qdrant client call patterns
         if hasattr(qdrant_client, "upsert"):
             # qdrant_client.upsert(collection_name=..., points=...)
-            qdrant_client.upsert(collection_name=LESSON_EMBEDDINGS, points=points)
+            await asyncio.to_thread(
+                qdrant_client.upsert,
+                collection_name=LESSON_EMBEDDINGS,
+                points=points,
+            )
             return
 
         if hasattr(qdrant_client, "points_api") and hasattr(
             qdrant_client.points_api, "upsert"
         ):
-            qdrant_client.points_api.upsert(
-                collection_name=LESSON_EMBEDDINGS, points=points
+            await asyncio.to_thread(
+                qdrant_client.points_api.upsert,
+                collection_name=LESSON_EMBEDDINGS,
+                points=points,
             )
             return
 
         # Fallback: try upload_collection (older/newer APIs)
         if hasattr(qdrant_client, "upload_collection"):
-            qdrant_client.upload_collection(
-                collection_name=LESSON_EMBEDDINGS, vectors=vectors, payload=points
+            await asyncio.to_thread(
+                qdrant_client.upload_collection,
+                collection_name=LESSON_EMBEDDINGS,
+                vectors=vectors,
+                payload=points,
             )
             return
 

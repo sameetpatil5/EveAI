@@ -8,4 +8,5 @@ export interface Lesson {
   references?: string[]
   youtube_links?: string[]
   completed: boolean
+  error_message?: string
 }

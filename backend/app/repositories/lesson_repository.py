@@ -28,6 +28,30 @@ class LessonRepository:
         )
         await self.db.commit()
 
+    async def save_error(self, lesson_id: str, error_message: str) -> None:
+        await self.db.execute(
+            update(Lesson)
+            .where(Lesson.id == lesson_id)
+            .values(error_message=error_message)
+        )
+        await self.db.commit()
+
+    async def reset_generation(self, lesson_id: str) -> None:
+        await self.db.execute(
+            update(Lesson)
+            .where(Lesson.id == lesson_id)
+            .values(
+                generation_status="pending",
+                error_message=None,
+                content=None,
+                summary=None,
+                hobby_explanation=None,
+                references=None,
+                youtube_links=None,
+            )
+        )
+        await self.db.commit()
+
     async def get_progress(self, user_id: str, lesson_id: str) -> LessonProgress | None:
         result = await self.db.execute(
             select(LessonProgress).where(

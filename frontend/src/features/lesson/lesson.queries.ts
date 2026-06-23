@@ -1,6 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { queryClient } from '@/lib/queryClient'
-import { getLesson, markLessonComplete, getNextLesson } from './lesson.api'
+import {
+  getLesson,
+  retryLessonGeneration,
+  markLessonComplete,
+  getNextLesson,
+} from './lesson.api'
 import type { Lesson } from './lesson.types'
 
 export const useLessonQuery = (lessonId: string | null) =>
@@ -8,6 +13,19 @@ export const useLessonQuery = (lessonId: string | null) =>
     queryKey: ['lesson', lessonId],
     queryFn: () => getLesson(lessonId as string),
     enabled: !!lessonId,
+    refetchInterval: (data) =>
+      data?.generation_status === 'generating' ? 3000 : false,
+    refetchOnWindowFocus: false,
+  })
+
+export const useRetryLessonGenerationMutation = () =>
+  useMutation<{ status: string }, Error, string>({
+    mutationFn: (lessonId) => retryLessonGeneration(lessonId),
+    onSuccess: (_, lessonId) => {
+      queryClient.invalidateQueries({ queryKey: ['lesson', lessonId] })
+      queryClient.invalidateQueries({ queryKey: ['subjects'] })
+      queryClient.invalidateQueries({ queryKey: ['course'] })
+    },
   })
 
 export const useMarkCompleteMutation = () =>

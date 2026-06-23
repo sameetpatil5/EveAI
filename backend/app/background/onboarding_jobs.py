@@ -72,7 +72,9 @@ async def run_post_onboarding_setup(user_id: str, job_id: str) -> None:
                         "title": getattr(output, "title", subject.name),
                         "description": getattr(output, "description", ""),
                         "total_modules": len(getattr(output, "modules", [])),
-                        "generation_status": "pending",
+                        # Course structure metadata is available immediately after generation.
+                        # Individual lessons still generate on demand.
+                        "generation_status": "complete",
                     },
                 )
 

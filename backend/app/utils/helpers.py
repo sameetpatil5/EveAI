@@ -7,6 +7,17 @@ def generate_uuid() -> str:
     return str(uuid.uuid4())
 
 
+def generate_deterministic_uuid(*parts: str) -> str:
+    """
+    Generate a stable UUID5 from one or more string parts.
+
+    Example:
+        generate_deterministic_uuid(lesson_id, str(chunk_index))
+    """
+    value = ":".join(str(part) for part in parts)
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, value))
+
+
 def utcnow() -> datetime:
     """Returns current UTC datetime."""
     return datetime.now(timezone.utc)

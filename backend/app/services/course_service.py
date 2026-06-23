@@ -38,6 +38,11 @@ class CourseService:
             if subject and subject.user_id != user_id:
                 raise ForbiddenError("Not allowed")
 
+        # If the outline exists, treat the course as ready even if the DB flag is stale.
+        course_status = getattr(course, "generation_status", "pending")
+        if course_status == "pending" and getattr(course, "modules", None):
+            course_status = "complete"
+
         # Build CourseStructureResponse by mapping modules and lessons
         modules_out = []
         for module in getattr(course, "modules", []):
@@ -74,7 +79,7 @@ class CourseService:
             "title": getattr(course, "title"),
             "description": getattr(course, "description", None),
             "total_modules": getattr(course, "total_modules", 0),
-            "generation_status": getattr(course, "generation_status", "pending"),
+            "generation_status": course_status,
             "modules": modules_out,
         }
         return CourseStructureResponse.model_validate(course_out)

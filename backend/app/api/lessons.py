@@ -1,25 +1,62 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Response, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.common import success_response
 from app.services.lesson_service import LessonService
 from app.dependencies import get_db, get_current_user
 from app.models.user import User
+from app.core.database import AsyncSessionLocal
 
 router = APIRouter(prefix="/lessons", tags=["lessons"])
+
+
+async def _background_generate_lesson(lesson_id: str) -> None:
+    """Background task wrapper that creates its own database session."""
+    async with AsyncSessionLocal() as session:
+        service = LessonService()
+        await service.generate_lesson_content(lesson_id, session)
 
 
 @router.get("/{lesson_id}")
 async def get_lesson(
     lesson_id: str,
+    response: Response,
+    background_tasks: BackgroundTasks,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     service = LessonService()
-    result = await service.get_lesson(lesson_id, user.id, db)
-    # Return 202 if generating, 200 otherwise
-    status_code = 202 if result.generation_status == "generating" else 200
+    result, should_start_generation = await service.get_lesson(lesson_id, user.id, db)
+
+    if should_start_generation:
+        response.status_code = status.HTTP_202_ACCEPTED
+        background_tasks.add_task(_background_generate_lesson, lesson_id)
+
+    if result.generation_status == "generating":
+        response.status_code = status.HTTP_202_ACCEPTED
+
     return success_response(result.model_dump())
+
+
+@router.post("/{lesson_id}/retry")
+async def retry_lesson_generation(
+    lesson_id: str,
+    response: Response,
+    background_tasks: BackgroundTasks,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    service = LessonService()
+    lesson, _ = await service.get_lesson(lesson_id, user.id, db)
+
+    if lesson.generation_status != "failed":
+        return success_response({"status": lesson.generation_status})
+
+    await service.reset_lesson_generation(lesson_id, db)
+    response.status_code = status.HTTP_202_ACCEPTED
+    background_tasks.add_task(_background_generate_lesson, lesson_id)
+
+    return success_response({"status": "retrying"})
 
 
 @router.post("/{lesson_id}/complete")
@@ -37,8 +74,5 @@ async def mark_complete(
 async def get_next_lesson(
     user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)
 ):
-    # Note: need current_lesson_id; this is a placeholder
-    # In practice, client sends current_lesson_id as query param
     service = LessonService()
-    # Placeholder: would need current_lesson_id from request
     return success_response(None)

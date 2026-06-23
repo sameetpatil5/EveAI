@@ -2,7 +2,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 template = """
 You are an assistant that generates lesson content for a single lesson title.
-Template variables: lesson_title, module_context, subject, academic_level, hobbies
+Template variables: {lesson_title}, {module_context}, {subject}, {academic_level}, {hobbies}
 Produce JSON matching LessonContentOutput:
 - title
 - content (Markdown)

@@ -30,6 +30,7 @@ class Settings(BaseSettings):
 
     # Gemini
     GOOGLE_API_KEY: str
+    GOOGLE_API_KEYS: str = ""  # comma-separated backup keys
 
     GEMINI_CHAT_MODEL: str
     GEMINI_EMBEDDING_MODEL: str

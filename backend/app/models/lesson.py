@@ -28,6 +28,7 @@ class Lesson(Base):
     references = Column(JSON, nullable=True)
     youtube_links = Column(JSON, nullable=True)
     hobby_explanation = Column(Text, nullable=True)
+    error_message = Column(Text, nullable=True)
     generation_status = Column(String, default="pending")
     created_at = Column(DateTime(timezone=True), default=utcnow)
 
