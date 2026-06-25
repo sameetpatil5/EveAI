@@ -34,8 +34,9 @@ export default function CoursePage() {
   const lesson = lessonData
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <main className="rounded-3xl border border-[#e9eaf2] bg-white p-6 min-h-[60vh]">
+    <div className="h-full min-h-0 px-4 py-4">
+      <main className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#e9eaf2] bg-white">
+        <div className="h-full min-h-0 overflow-y-auto p-6">
           {activeLessonId ? (
             <div className="space-y-6">
               {isLessonLoading ? (
@@ -62,7 +63,7 @@ export default function CoursePage() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
                       <h1 className="text-2xl font-semibold text-[#0f172a]">{lesson.title}</h1>
                       <p className="text-sm text-[#64748b]">Lesson content is shown below.</p>
@@ -81,6 +82,7 @@ export default function CoursePage() {
               </div>
             </div>
           )}
+        </div>
       </main>
     </div>
   )

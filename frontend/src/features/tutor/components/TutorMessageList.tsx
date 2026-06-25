@@ -16,7 +16,7 @@ export function TutorMessageList({ messages, isLoading }: TutorMessageListProps)
   }, [messages, isLoading])
 
   return (
-    <div ref={ref} className="h-[360px] overflow-auto space-y-3 p-4">
+    <div ref={ref} className="flex h-full min-h-0 flex-col overflow-y-auto space-y-3 p-4">
       {messages.map((m, idx) => (
         <TutorMessageBubble key={idx} message={m} />
       ))}

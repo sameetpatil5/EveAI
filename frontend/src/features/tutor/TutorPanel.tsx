@@ -35,16 +35,18 @@ export function TutorPanel() {
   }
 
   return (
-    <div className="flex h-full flex-col border-l border-[#e9eaf2] bg-[#f8fafc]">
-      <div className="px-4 py-3 font-medium">AI Tutor</div>
-      <div className="flex-1">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#f8fafc]">
+      <div className="border-b border-[#e9eaf2] px-4 py-3 font-medium">AI Tutor</div>
+      <div className="flex-1 min-h-0 overflow-hidden">
         {activeLessonId ? (
           <TutorMessageList messages={messages} isLoading={isLoading} />
         ) : (
-          <div className="p-6 text-sm text-[#64748b]">Open a lesson to start chatting with the AI Tutor.</div>
+          <div className="flex h-full items-center justify-center p-6 text-sm text-[#64748b]">
+            Open a lesson to start chatting with the AI Tutor.
+          </div>
         )}
       </div>
-      <div>
+      <div className="border-t border-[#e9eaf2] bg-white">
         <TutorInput onSend={handleSend} disabled={!activeLessonId || isLoading} />
       </div>
     </div>

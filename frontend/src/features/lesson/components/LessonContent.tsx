@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import type { Lesson } from '../lesson.types'
 import { LessonHeader } from './LessonHeader'
 import { LessonReferences } from './LessonReferences'
@@ -13,7 +14,7 @@ export function LessonContent({ lesson }: LessonContentProps) {
       <LessonHeader title={lesson.title} completed={lesson.completed} />
 
       {lesson.content ? (
-        <div className="prose max-w-none text-sm text-[#0f172a]"><ReactMarkdown>{lesson.content}</ReactMarkdown></div>
+        <div className="prose prose-sm max-w-none text-sm text-[#0f172a]"><ReactMarkdown remarkPlugins={[remarkGfm]}>{lesson.content}</ReactMarkdown></div>
       ) : null}
 
       {lesson.hobby_explanation ? (

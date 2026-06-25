@@ -16,17 +16,25 @@ export default function LearningLayout() {
   }, [params.courseId])
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc]">
-      <div className="mx-auto max-w-7xl px-4 py-6">
-        <div className="grid grid-cols-[280px_1fr_320px] gap-6">
-          <aside className="hidden md:block">
-            <CourseSidebar courseId={params.courseId ?? ''} />
+    <div className="min-h-screen bg-[#f8f9fc] overflow-hidden">
+      <div className="mx-auto max-w-7xl h-screen px-4 py-6">
+        <div className="grid h-full min-h-0 grid-cols-[280px_minmax(0,1fr)_320px] gap-6">
+          <aside className="hidden md:flex h-full min-h-0">
+            <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#e9eaf2] bg-white">
+              <CourseSidebar courseId={params.courseId ?? ''} />
+            </div>
           </aside>
-          <section className="min-h-[60vh] overflow-y-auto">
-            <Outlet />
+          <section className="h-full min-h-0 overflow-hidden">
+            <div className="h-full min-h-0 overflow-hidden rounded-3xl border border-[#e9eaf2] bg-white">
+              <div className="h-full min-h-0 overflow-y-auto">
+                <Outlet />
+              </div>
+            </div>
           </section>
-          <aside className="hidden lg:block">
-            <TutorPanel />
+          <aside className="hidden lg:flex h-full min-h-0">
+            <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#e9eaf2] bg-white">
+              <TutorPanel />
+            </div>
           </aside>
         </div>
       </div>

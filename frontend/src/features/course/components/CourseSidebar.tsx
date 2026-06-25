@@ -29,25 +29,27 @@ export default function CourseSidebar({ courseId }: CourseSidebarProps) {
   }
 
   return (
-    <aside className="w-full max-w-xs space-y-4">
-      <div className="rounded-3xl border border-[#e9eaf2] bg-white p-4">
-        <div className="text-sm font-medium text-[#475569]">{data.title}</div>
-        <div className="text-xs text-[#64748b]">{data.modules.length} modules</div>
-      </div>
+    <aside className="flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="h-full min-h-0 overflow-y-auto space-y-4 p-4">
+        <div className="rounded-3xl border border-[#e9eaf2] bg-white p-4 shadow-sm">
+          <div className="text-sm font-medium text-[#475569]">{data.title}</div>
+          <div className="text-xs text-[#64748b]">{data.modules.length} modules</div>
+        </div>
 
-      <div className="space-y-3">
-        {data.modules.map((mod) => (
-          <ModuleSection
-            key={mod.id}
-            module={mod}
-            activeLessonId={activeLessonId ?? undefined}
-            onLessonClick={(lessonId) => {
-              const nextParams = new URLSearchParams(searchParams)
-              nextParams.set('lesson', lessonId)
-              setSearchParams(nextParams)
-            }}
-          />
-        ))}
+        <div className="space-y-3">
+          {data.modules.map((mod) => (
+            <ModuleSection
+              key={mod.id}
+              module={mod}
+              activeLessonId={activeLessonId ?? undefined}
+              onLessonClick={(lessonId) => {
+                const nextParams = new URLSearchParams(searchParams)
+                nextParams.set('lesson', lessonId)
+                setSearchParams(nextParams)
+              }}
+            />
+          ))}
+        </div>
       </div>
     </aside>
   )
