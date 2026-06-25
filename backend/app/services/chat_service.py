@@ -25,11 +25,15 @@ class ChatService:
         history = await get_json(f"chat:{sid}") or []
 
         lesson_repo = LessonRepository(db)
-        lesson = await lesson_repo.get_by_id(lesson_id)
+        lesson = await lesson_repo.get_by_id_with_module(lesson_id)
         if not lesson:
             raise NotFoundError("Lesson not found")
 
-        chunks = await lesson_store.search(message, getattr(lesson, "subject_id", None))
+        module = getattr(lesson, "module", None)
+        course = getattr(module, "course", None) if module else None
+        subject_id = getattr(course, "subject_id", None) if course else None
+
+        chunks = await lesson_store.search(message, subject_id)
         user_repo = UserRepository(db)
         profile = await user_repo.get_profile(user_id)
         from app.ai.agents import get_tutor_agent
@@ -55,7 +59,7 @@ class ChatService:
         await set_json(f"chat:{sid}", history, ttl=7200)
 
         # Note: chat DB persistence not implemented in repositories; skip DB save
-        return TutorChatResponse.model_validate({"session_id": sid, "reply": reply})
+        return TutorChatResponse.model_validate({"session_id": sid, "response": reply})
 
     async def quick_ask(
         self, user_id: str, message: str, subject_id: str | None, db: AsyncSession
@@ -67,4 +71,4 @@ class ChatService:
             f"User level: {getattr(profile, 'academic_level', '')}\nQuestion: {message}"
         )
         raw = await llm.ainvoke(prompt)
-        return QuickAskResponse.model_validate({"answer": raw})
+        return QuickAskResponse.model_validate({"response": raw})

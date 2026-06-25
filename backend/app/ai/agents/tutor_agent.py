@@ -31,6 +31,12 @@ class TutorAgent:
                     ),
                 }
             )
-            return result
+            if isinstance(result, str):
+                return result
+            if hasattr(result, "content"):
+                return getattr(result, "content")
+            if hasattr(result, "text"):
+                return getattr(result, "text")
+            return str(result)
         except Exception as e:
             raise AIGenerationError(f"Tutor chat failed: {e}") from e

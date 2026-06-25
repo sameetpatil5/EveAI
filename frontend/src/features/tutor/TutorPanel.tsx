@@ -2,29 +2,16 @@ import { useEffect, useState } from 'react'
 import { tutorChat } from './tutor.api'
 import { TutorMessageList } from './components/TutorMessageList'
 import { TutorInput } from './components/TutorInput'
+import { useLearningStore } from '@/stores/learning.store'
 import type { TutorMessage } from './tutor.types'
 
 export function TutorPanel() {
   const [messages, setMessages] = useState<TutorMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
-  const [activeLessonId, setActiveLessonId] = useState<string | null>(null)
-
-  // Try to read activeLessonId from learning store if available
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const mod: any = await import('@/stores/learning.store')
-        const ls: any = mod?.default ?? mod
-        if (ls && ls.activeLessonId) setActiveLessonId(ls.activeLessonId)
-      } catch (e) {
-        // ignore
-      }
-    })()
-  }, [])
+  const activeLessonId = useLearningStore((s) => s.activeLessonId)
 
   useEffect(() => {
-    // clear messages on lesson change
     setMessages([])
     setSessionId(null)
   }, [activeLessonId])

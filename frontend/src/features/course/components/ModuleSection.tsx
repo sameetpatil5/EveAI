@@ -1,15 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import type { Module as ModuleType } from '../course.types'
 import { LessonItem } from './LessonItem'
 
 interface ModuleSectionProps {
   module: ModuleType
+  activeLessonId?: string
   onLessonClick?: (lessonId: string) => void
 }
 
-export function ModuleSection({ module, onLessonClick }: ModuleSectionProps) {
-  const [open, setOpen] = useState(false)
+export function ModuleSection({ module, activeLessonId, onLessonClick }: ModuleSectionProps) {
+  const [open, setOpen] = useState(() => module.lessons.some((lesson) => lesson.id === activeLessonId))
+
+  useEffect(() => {
+    if (!open && module.lessons.some((lesson) => lesson.id === activeLessonId)) {
+      setOpen(true)
+    }
+  }, [activeLessonId, module.lessons, open])
 
   return (
     <div className="space-y-2">
@@ -31,6 +38,7 @@ export function ModuleSection({ module, onLessonClick }: ModuleSectionProps) {
               key={lesson.id}
               lesson={lesson}
               locked={module.is_locked}
+              active={lesson.id === activeLessonId}
               onClick={() => onLessonClick?.(lesson.id)}
             />
           ))}

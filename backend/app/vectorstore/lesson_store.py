@@ -87,12 +87,9 @@ class LessonVectorStore:
         )
 
     async def search(
-        self, query_text: str, subject_id: str, top_k: int = 5
+        self, query_text: str, subject_id: str | None = None, top_k: int = 5
     ) -> List[str]:
-        """Embed query_text, search Qdrant for similar lesson chunks filtered by subject_id.
-
-        Returns a list of matching `content_chunk` strings (may be empty).
-        """
+        """Embed query_text and search Qdrant for similar lesson chunks filtered by subject_id."""
         embeddings = get_embeddings()
         q = await asyncio.to_thread(
             getattr(embeddings, "embed_query", embeddings.embed_documents), [query_text]
@@ -101,41 +98,49 @@ class LessonVectorStore:
         if isinstance(q, list) and len(q) == 1:
             query_vector = q[0]
         else:
-            # embeddings.embed_documents may return list of vectors even for one input
             query_vector = q if isinstance(q[0], list) else q
 
-        # Prepare a filter payload if Qdrant supports it
         qdrant_filter = (
             {"must": [{"key": "subject_id", "match": {"value": subject_id}}]}
             if subject_id
             else None
         )
 
-        # Try common search APIs
-        if hasattr(qdrant_client, "search"):
-            results = qdrant_client.search(
+        if hasattr(qdrant_client, "query_points"):
+            results = qdrant_client.query_points(
                 collection_name=LESSON_EMBEDDINGS,
-                query_vector=query_vector,
-                filter=qdrant_filter,
+                query=query_vector,
+                query_filter=qdrant_filter,
                 limit=top_k,
+                with_payload=True,
             )
-        elif hasattr(qdrant_client, "search_points"):
-            results = qdrant_client.search_points(
+        elif hasattr(qdrant_client, "query"):
+            results = qdrant_client.query(
                 collection_name=LESSON_EMBEDDINGS,
-                query_vector=query_vector,
+                query_text=query_text,
+                query_filter=qdrant_filter,
                 limit=top_k,
-                filter=qdrant_filter,
             )
         else:
             raise NotImplementedError(
                 "Installed Qdrant client does not expose a supported search API"
             )
 
-        # Extract content_chunk from payloads
         chunks: List[str] = []
         for item in results or []:
-            payload = getattr(item, "payload", None) or item.get("payload", {})
-            chunk = payload.get("content_chunk") if payload else None
+            if isinstance(item, (tuple, list)) and item:
+                item = item[0]
+
+            if isinstance(item, dict):
+                payload = item.get("payload", {})
+            else:
+                payload = getattr(item, "payload", None)
+                if payload is None and hasattr(item, "point"):
+                    point = getattr(item, "point")
+                    payload = getattr(point, "payload", None)
+                payload = payload or {}
+
+            chunk = payload.get("content_chunk") if isinstance(payload, dict) else None
             if chunk:
                 chunks.append(chunk)
         return chunks

@@ -4,15 +4,16 @@ import type { LessonMeta } from '../course.types'
 interface LessonItemProps {
   lesson: LessonMeta
   locked?: boolean
+  active?: boolean
   onClick?: () => void
 }
 
-export function LessonItem({ lesson, locked = false, onClick }: LessonItemProps) {
+export function LessonItem({ lesson, locked = false, active = false, onClick }: LessonItemProps) {
   return (
     <button
       onClick={onClick}
       disabled={locked}
-      className="flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 text-left hover:bg-slate-50 disabled:opacity-60"
+      className={`flex w-full items-center justify-between gap-3 rounded-md px-3 py-2 text-left transition ${active ? 'bg-[#eef2ff] text-[#0f172a]' : 'hover:bg-slate-50'} disabled:opacity-60`}
     >
       <div>
         <div className="text-sm font-medium text-[#0f172a]">{lesson.title}</div>

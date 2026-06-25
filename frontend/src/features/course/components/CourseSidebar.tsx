@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { useCourseStructureQuery } from '../course.queries'
 import { ModuleSection } from './ModuleSection'
 import { CourseGeneratingState } from './CourseGeneratingState'
@@ -8,8 +8,13 @@ interface CourseSidebarProps {
 }
 
 export default function CourseSidebar({ courseId }: CourseSidebarProps) {
-  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeLessonId = searchParams.get('lesson')
   const { data, status } = useCourseStructureQuery(courseId)
+
+  if (!courseId) {
+    return null
+  }
 
   if (status === 'pending') {
     return <div className="p-4">Loading course…</div>
@@ -32,7 +37,16 @@ export default function CourseSidebar({ courseId }: CourseSidebarProps) {
 
       <div className="space-y-3">
         {data.modules.map((mod) => (
-          <ModuleSection key={mod.id} module={mod} onLessonClick={(lessonId) => navigate(`/app/lesson/${lessonId}`)} />
+          <ModuleSection
+            key={mod.id}
+            module={mod}
+            activeLessonId={activeLessonId ?? undefined}
+            onLessonClick={(lessonId) => {
+              const nextParams = new URLSearchParams(searchParams)
+              nextParams.set('lesson', lessonId)
+              setSearchParams(nextParams)
+            }}
+          />
         ))}
       </div>
     </aside>

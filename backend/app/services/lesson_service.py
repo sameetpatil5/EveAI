@@ -172,10 +172,14 @@ class LessonService:
 
             try:
                 logger.info(f"[BG] Upserting to vector store for lesson {lesson_id}")
+                metadata = {"lesson_id": lesson_id}
+                if course is not None and getattr(course, "subject_id", None):
+                    metadata["subject_id"] = course.subject_id
+
                 await lesson_store.upsert(
                     lesson_id,
                     content_data.get("content", ""),
-                    {"lesson_id": lesson_id},
+                    metadata,
                 )
                 logger.info(
                     f"[BG] Vector store upsert completed for lesson {lesson_id}"
