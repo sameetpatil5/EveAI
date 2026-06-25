@@ -1,6 +1,4 @@
 from app.core.exceptions import AIGenerationError
-from langchain_core.output_parsers import PydanticOutputParser
-
 from app.ai.schemas.schedule_output import ScheduleOutput
 from app.ai.prompts.schedule_prompts import SCHEDULE_GENERATION_PROMPT
 from app.utils.llm_provider import LLMProvider
@@ -13,10 +11,10 @@ class ScheduleAgent:
     def __init__(self, llm=None):
         from app.ai.base import get_llm
 
-        self.llm = llm or get_llm()
+        # Use structured output model to return ScheduleOutput instances
+        self.llm = (llm or get_llm()).with_structured_output(ScheduleOutput)
         self.prompt = SCHEDULE_GENERATION_PROMPT
-        self.parser = PydanticOutputParser(pydantic_object=ScheduleOutput)
-        self.chain = self.prompt | self.llm | self.parser
+        self.chain = self.prompt | self.llm
         self.provider = LLMProvider(settings)
 
     async def generate(
@@ -41,12 +39,13 @@ class ScheduleAgent:
                     logger.info(f"Quota error detected; rotating to backup API key")
                     try:
                         # Reinitialize LLM with new key
+                        # Reinitialize structured LLM with rotated key
                         self.llm = ChatGoogleGenerativeAI(
                             model=settings.GEMINI_CHAT_MODEL,
                             google_api_key=new_key,
                             temperature=0.7,
-                        )
-                        self.chain = self.prompt | self.llm | self.parser
+                        ).with_structured_output(ScheduleOutput)
+                        self.chain = self.prompt | self.llm
 
                         # Retry generation with new key
                         return await self.chain.ainvoke(

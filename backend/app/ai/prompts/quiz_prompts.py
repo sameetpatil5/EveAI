@@ -9,29 +9,23 @@ QUIZ PARAMETERS:
 - Number of Questions: {question_count}
 - Question Types: Multiple choice, True/False, Short answer (mix based on difficulty)
 
-Generate a JSON response with EXACTLY this structure:
-{{
-  "title": "<descriptive quiz title>",
-  "questions": [
-    {{
-      "question_text": "<clear, specific question>",
-      "question_type": "mcq|truefalse|subjective",
-      "options": ["<option1>", "<option2>", "<option3>", "<option4>"],
-      "correct_answer": "<exact answer or best option>",
-      "explanation": "<detailed explanation of why this is correct>"
-    }}
-  ]
-}}
+Provide a structured quiz representation with the following fields:
+
+- `title`: descriptive quiz title
+- `questions`: list of question objects containing:
+  - `question_text`
+  - `question_type`: mcq|truefalse|subjective
+  - `options`: list of options (for mcq)
+  - `correct_answer`: exact answer or best option
+  - `explanation`: detailed explanation
 
 RULES:
-1. Output MUST be valid JSON with proper commas and syntax.
-2. For "mcq" type: must have 4 options; correct_answer should be one of the options.
-3. For "truefalse" type: options should be ["True", "False"]; correct_answer is "True" or "False".
-4. For "subjective" type: options can be null/empty; correct_answer is a sample answer.
-5. All explanations must be 2-3 sentences, educational, and clear.
-6. Questions should test understanding, not just memorization.
-7. Difficulty should scale: easy questions test recall, medium test application, hard test analysis.
-8. Do NOT include any text outside the JSON block.
+1. For `mcq` type: include 4 options; `correct_answer` must be one of them.
+2. For `truefalse` type: options should be ["True", "False"]; `correct_answer` is "True" or "False".
+3. For `subjective` type: `options` can be null/empty; `correct_answer` is a sample answer.
+4. All explanations must be 2-3 sentences and educational.
+5. Questions should test understanding, not just memorization.
+6. Difficulty should scale: easy recall, medium application, hard analysis.
 """
 
 QUIZ_GENERATION_PROMPT = ChatPromptTemplate.from_template(template)

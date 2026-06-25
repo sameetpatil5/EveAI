@@ -27,12 +27,13 @@ def extract_json_from_text(text: str) -> str | None:
 
 
 def sanitize_json_text(raw: str) -> str:
-    """Sanitize JSON-ish text by escaping literal newlines inside string values.
+    """Sanitize JSON-ish text by escaping invalid characters inside string values.
 
-    This is a conservative sanitizer: it walks the text and when inside a
-    double-quoted string it replaces raw newlines and carriage returns with
-    explicit escape sequences. It does not attempt full JSON repair but fixes
-    the common issue where LLMs place unescaped newlines inside quoted values.
+    This sanitizer repairs common LLM JSON issues by:
+    - escaping raw newlines, carriage returns, and tabs inside string values
+    - escaping unescaped double quotes inside string values
+    - escaping stray backslashes that are not part of a valid JSON escape
+    - converting other invalid control characters into unicode escapes
     """
     if raw is None:
         return raw
@@ -40,30 +41,73 @@ def sanitize_json_text(raw: str) -> str:
     out_chars = []
     in_string = False
     escape = False
-    for ch in raw:
+    length = len(raw)
+
+    def _is_likely_string_end(idx: int) -> bool:
+        # If the next non-whitespace character is a JSON delimiter and the following
+        # structure looks like valid JSON, treat the quote as closing.
+        while idx < length and raw[idx] in " \t\r\n":
+            idx += 1
+        if idx >= length:
+            return True
+        ch = raw[idx]
+        if ch in ":,}]":
+            return True
+        return False
+
+    i = 0
+    while i < length:
+        ch = raw[i]
+
         if escape:
-            # previous was a backslash, include char verbatim
             out_chars.append(ch)
             escape = False
+            i += 1
             continue
 
         if ch == "\\":
-            out_chars.append(ch)
-            escape = True
+            next_char = raw[i + 1] if i + 1 < length else ""
+            if next_char in '"\\/bfnrtu':
+                out_chars.append(ch)
+                escape = True
+            else:
+                out_chars.append("\\\\")
+            i += 1
             continue
 
         if ch == '"':
+            if in_string:
+                if _is_likely_string_end(i + 1):
+                    out_chars.append(ch)
+                    in_string = False
+                else:
+                    out_chars.append('\\"')
+                i += 1
+                continue
             out_chars.append(ch)
-            in_string = not in_string
+            in_string = True
+            i += 1
             continue
 
         if in_string:
             if ch == "\n":
                 out_chars.append("\\n")
+                i += 1
                 continue
             if ch == "\r":
                 out_chars.append("\\r")
+                i += 1
                 continue
+            if ch == "\t":
+                out_chars.append("\\t")
+                i += 1
+                continue
+            if ord(ch) < 0x20:
+                out_chars.append(f"\\u{ord(ch):04x}")
+                i += 1
+                continue
+
         out_chars.append(ch)
+        i += 1
 
     return "".join(out_chars)

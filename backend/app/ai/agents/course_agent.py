@@ -1,5 +1,4 @@
 from app.core.exceptions import AIGenerationError
-from langchain_core.output_parsers import PydanticOutputParser
 from app.ai.schemas.course_output import CourseStructureOutput
 from app.ai.prompts.course_prompts import COURSE_GENERATION_PROMPT
 from app.utils.llm_provider import LLMProvider
@@ -12,10 +11,11 @@ class CourseAgent:
     def __init__(self, llm=None):
         from app.ai.base import get_llm
 
-        self.llm = llm or get_llm()
+        # Use structured output to have the model return validated Pydantic objects
+        self.llm = (llm or get_llm()).with_structured_output(CourseStructureOutput)
         self.prompt = COURSE_GENERATION_PROMPT
-        self.parser = PydanticOutputParser(pydantic_object=CourseStructureOutput)
-        self.chain = self.prompt | self.llm | self.parser
+        # Chain: prompt -> structured LLM (returns CourseStructureOutput instance)
+        self.chain = self.prompt | self.llm
         self.provider = LLMProvider(settings)
 
     async def generate(
@@ -48,12 +48,13 @@ class CourseAgent:
                     logger.info(f"Quota error detected; rotating to backup API key")
                     try:
                         # Reinitialize LLM with new key
+                        # Reinitialize a structured LLM with the rotated key
                         self.llm = ChatGoogleGenerativeAI(
                             model=settings.GEMINI_CHAT_MODEL,
                             google_api_key=new_key,
                             temperature=0.7,
-                        )
-                        self.chain = self.prompt | self.llm | self.parser
+                        ).with_structured_output(CourseStructureOutput)
+                        self.chain = self.prompt | self.llm
 
                         # Retry generation with new key
                         return await self.chain.ainvoke(
