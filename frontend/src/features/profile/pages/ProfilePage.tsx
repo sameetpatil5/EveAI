@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useProfileQuery } from '../profile.queries'
 import AccountSection from '../components/AccountSection'
 import HobbiesSection from '../components/HobbiesSection'

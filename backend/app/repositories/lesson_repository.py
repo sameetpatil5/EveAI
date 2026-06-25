@@ -14,6 +14,20 @@ class LessonRepository:
         result = await self.db.execute(select(Lesson).where(Lesson.id == lesson_id))
         return result.scalars().first()
 
+    async def get_by_id_with_module(self, lesson_id: str) -> Lesson | None:
+        from app.models.course import Module, Course
+
+        result = await self.db.execute(
+            select(Lesson)
+            .where(Lesson.id == lesson_id)
+            .options(
+                selectinload(Lesson.module)
+                .selectinload(Module.course)
+                .selectinload(Course.subject)
+            )
+        )
+        return result.scalars().first()
+
     async def update_status(self, lesson_id: str, status: str) -> None:
         await self.db.execute(
             update(Lesson)
@@ -95,4 +109,74 @@ class LessonRepository:
             .order_by(Lesson.lesson_order)
             .limit(1)
         )
+        next_lesson = result.scalars().first()
+        if next_lesson:
+            return next_lesson
+
+        # If this is the last lesson in the module, return the first lesson of the next module.
+        from app.models.course import Module
+
+        module_result = await self.db.execute(
+            select(Module).where(Module.id == module_id)
+        )
+        module = module_result.scalars().first()
+        if not module:
+            return None
+
+        result = await self.db.execute(
+            select(Lesson)
+            .where(Lesson.module_id == module.id, Lesson.lesson_order > current_order)
+            .order_by(Lesson.lesson_order)
+            .limit(1)
+        )
+        next_lesson = result.scalars().first()
+        if next_lesson:
+            return next_lesson
+
+        next_module_result = await self.db.execute(
+            select(Module)
+            .where(
+                Module.course_id == module.course_id,
+                Module.module_order > module.module_order,
+            )
+            .order_by(Module.module_order)
+            .limit(1)
+        )
+        next_module = next_module_result.scalars().first()
+        if not next_module:
+            return None
+
+        result = await self.db.execute(
+            select(Lesson)
+            .where(Lesson.module_id == next_module.id)
+            .order_by(Lesson.lesson_order)
+            .limit(1)
+        )
         return result.scalars().first()
+
+    async def is_module_complete_for_user(self, user_id: str, module_id: str) -> bool:
+        from app.models.course import Module
+
+        module_result = await self.db.execute(
+            select(Module).where(Module.id == module_id)
+        )
+        module = module_result.scalars().first()
+        if not module:
+            return False
+
+        lessons = await self.db.execute(
+            select(Lesson.id).where(Lesson.module_id == module_id)
+        )
+        lesson_ids = [row[0] for row in lessons.fetchall()]
+        if not lesson_ids:
+            return False
+
+        progress_count = await self.db.execute(
+            select(LessonProgress).where(
+                LessonProgress.user_id == user_id,
+                LessonProgress.lesson_id.in_(lesson_ids),
+                LessonProgress.completed == True,
+            )
+        )
+        completed_rows = progress_count.scalars().all()
+        return len(completed_rows) == len(lesson_ids)

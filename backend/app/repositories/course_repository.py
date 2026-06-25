@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
 
 from app.models.course import Course, Module
@@ -59,3 +59,29 @@ class CourseRepository:
         await self.db.commit()
         await self.db.refresh(lesson)
         return lesson
+
+    async def get_module_by_id(self, module_id: str) -> Module | None:
+        result = await self.db.execute(select(Module).where(Module.id == module_id))
+        return result.scalars().first()
+
+    async def get_next_module(self, current_module_id: str) -> Module | None:
+        current_module = await self.get_module_by_id(current_module_id)
+        if not current_module:
+            return None
+
+        result = await self.db.execute(
+            select(Module)
+            .where(
+                Module.course_id == current_module.course_id,
+                Module.module_order > current_module.module_order,
+            )
+            .order_by(Module.module_order)
+            .limit(1)
+        )
+        return result.scalars().first()
+
+    async def unlock_module(self, module_id: str) -> None:
+        await self.db.execute(
+            update(Module).where(Module.id == module_id).values(is_locked=False)
+        )
+        await self.db.commit()

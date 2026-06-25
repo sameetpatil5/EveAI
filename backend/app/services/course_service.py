@@ -43,15 +43,26 @@ class CourseService:
         if course_status == "pending" and getattr(course, "modules", None):
             course_status = "complete"
 
-        # Build CourseStructureResponse by mapping modules and lessons
+        # Build CourseStructureResponse by mapping modules and lessons.
+        # Compute module locks dynamically so the next module unlocks as soon as the prior one is complete.
+        modules = sorted(
+            getattr(course, "modules", []),
+            key=lambda mod: getattr(mod, "module_order", 0),
+        )
         modules_out = []
-        for module in getattr(course, "modules", []):
+        previous_module_complete = True
+
+        for module in modules:
+            lessons = sorted(
+                getattr(module, "lessons", []),
+                key=lambda lesson: getattr(lesson, "lesson_order", 0),
+            )
             lessons_out = []
-            for lesson in getattr(module, "lessons", []):
+            for lesson in lessons:
                 progress = await lesson_repo.get_progress(
                     user_id, getattr(lesson, "id")
                 )
-                completed = bool(progress and getattr(progress, "progress", False))
+                completed = bool(progress and getattr(progress, "completed", False))
                 lessons_out.append(
                     {
                         "id": getattr(lesson, "id"),
@@ -63,16 +74,21 @@ class CourseService:
                         "completed": completed,
                     }
                 )
+
+            current_module_complete = bool(lessons_out) and all(
+                lesson["completed"] for lesson in lessons_out
+            )
             modules_out.append(
                 {
                     "id": getattr(module, "id"),
                     "title": getattr(module, "title"),
                     "description": getattr(module, "description", None),
                     "module_order": getattr(module, "module_order", 0),
-                    "is_locked": getattr(module, "is_locked", True),
+                    "is_locked": not previous_module_complete,
                     "lessons": lessons_out,
                 }
             )
+            previous_module_complete = current_module_complete
 
         course_out = {
             "id": getattr(course, "id"),

@@ -1,6 +1,7 @@
 from typing import Tuple
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.repositories.course_repository import CourseRepository
 from app.repositories.lesson_repository import LessonRepository
 from app.vectorstore.lesson_store import lesson_store
 from app.core.exceptions import AIGenerationError, NotFoundError
@@ -102,33 +103,56 @@ class LessonService:
             True,
         )
 
-    async def generate_lesson_content(self, lesson_id: str, db: AsyncSession) -> None:
+    async def generate_lesson_content(
+        self, lesson_id: str, db: AsyncSession, user_id: str = None
+    ) -> None:
         """Background task to generate lesson content asynchronously."""
         logger.info(f"[BG] Starting lesson generation for {lesson_id}")
         repo = LessonRepository(db)
-        lesson = await repo.get_by_id(lesson_id)
+        lesson = await repo.get_by_id_with_module(lesson_id)
         if not lesson:
             logger.error(f"[BG] Lesson {lesson_id} not found")
             return
 
         try:
             from app.ai.agents import get_lesson_agent
+            from app.models.course import Module, Course
+            from app.repositories.user_repository import UserRepository
 
             agent = get_lesson_agent()
             logger.info(f"[BG] Agent initialized for lesson {lesson_id}")
 
+            # Extract context from relationships
+            module: Module = getattr(lesson, "module", None)
+            module_context = getattr(module, "description", "") if module else ""
+
+            course: Course = getattr(module, "course", None) if module else None
+            subject_name = (
+                getattr(course.subject, "name", "")
+                if course and getattr(course, "subject", None)
+                else ""
+            )
+
+            academic_level = ""
+            hobbies = []
+            if user_id:
+                user_repo = UserRepository(db)
+                user_profile = await user_repo.get_profile(user_id)
+                if user_profile:
+                    academic_level = getattr(user_profile, "academic_level", "")
+                hobbies = await user_repo.get_hobbies(user_id)
+
             logger.info(
                 f"[BG] Calling agent.generate for lesson: {lesson.title} "
-                f"(context={getattr(lesson, 'module_context', '')}, "
-                f"subject={getattr(lesson, 'subject_id', '')}, "
-                f"level={getattr(lesson, 'academic_level', '')})"
+                f"(module={module_context[:50] if module_context else 'N/A'}, "
+                f"subject={subject_name}, level={academic_level})"
             )
             output = await agent.generate(
                 lesson_title=lesson.title,
-                module_context=getattr(lesson, "module_context", ""),
-                subject=getattr(lesson, "subject_id", ""),
-                academic_level=getattr(lesson, "academic_level", ""),
-                hobbies=[],
+                module_context=module_context,
+                subject=subject_name,
+                academic_level=academic_level,
+                hobbies=hobbies,
             )
 
             logger.info(
@@ -181,10 +205,40 @@ class LessonService:
         self, lesson_id: str, user_id: str, db: AsyncSession
     ) -> None:
         repo = LessonRepository(db)
+        lesson = await repo.get_by_id(lesson_id)
+        if not lesson:
+            raise NotFoundError("Lesson not found")
+
         await repo.mark_complete(user_id, lesson_id)
+
+        module_id = getattr(lesson, "module_id", None)
+        if module_id and await repo.is_module_complete_for_user(user_id, module_id):
+            course_repo = CourseRepository(db)
+            next_module = await course_repo.get_next_module(module_id)
+            if next_module and getattr(next_module, "is_locked", True):
+                await course_repo.unlock_module(next_module.id)
 
     async def get_next_lesson(
         self, user_id: str, current_lesson_id: str, db: AsyncSession
     ):
         repo = LessonRepository(db)
-        return await repo.get_next_lesson(user_id, current_lesson_id)
+        lesson = await repo.get_next_lesson(user_id, current_lesson_id)
+        if not lesson:
+            return None
+
+        progress = await repo.get_progress(user_id, lesson.id)
+        completed = bool(progress and getattr(progress, "completed", False))
+
+        return LessonResponse.model_validate(
+            {
+                "id": lesson.id,
+                "title": lesson.title,
+                "generation_status": getattr(lesson, "generation_status", "pending"),
+                "content": getattr(lesson, "content", None),
+                "summary": getattr(lesson, "summary", None),
+                "hobby_explanation": getattr(lesson, "hobby_explanation", None),
+                "references": getattr(lesson, "references", None),
+                "youtube_links": getattr(lesson, "youtube_links", None),
+                "completed": completed,
+            }
+        )

@@ -10,11 +10,11 @@ from app.core.database import AsyncSessionLocal
 router = APIRouter(prefix="/lessons", tags=["lessons"])
 
 
-async def _background_generate_lesson(lesson_id: str) -> None:
+async def _background_generate_lesson(lesson_id: str, user_id: str = None) -> None:
     """Background task wrapper that creates its own database session."""
     async with AsyncSessionLocal() as session:
         service = LessonService()
-        await service.generate_lesson_content(lesson_id, session)
+        await service.generate_lesson_content(lesson_id, session, user_id)
 
 
 @router.get("/{lesson_id}")
@@ -30,7 +30,7 @@ async def get_lesson(
 
     if should_start_generation:
         response.status_code = status.HTTP_202_ACCEPTED
-        background_tasks.add_task(_background_generate_lesson, lesson_id)
+        background_tasks.add_task(_background_generate_lesson, lesson_id, user.id)
 
     if result.generation_status == "generating":
         response.status_code = status.HTTP_202_ACCEPTED
@@ -54,7 +54,7 @@ async def retry_lesson_generation(
 
     await service.reset_lesson_generation(lesson_id, db)
     response.status_code = status.HTTP_202_ACCEPTED
-    background_tasks.add_task(_background_generate_lesson, lesson_id)
+    background_tasks.add_task(_background_generate_lesson, lesson_id, user.id)
 
     return success_response({"status": "retrying"})
 
@@ -70,9 +70,12 @@ async def mark_complete(
     return success_response({"status": "completed"})
 
 
-@router.get("/next")
+@router.get("/{lesson_id}/next")
 async def get_next_lesson(
-    user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)
+    lesson_id: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
 ):
     service = LessonService()
-    return success_response(None)
+    next_lesson = await service.get_next_lesson(user.id, lesson_id, db)
+    return success_response(next_lesson.model_dump() if next_lesson else None)

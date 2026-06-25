@@ -8,14 +8,21 @@ import {
 } from './lesson.api'
 import type { Lesson } from './lesson.types'
 
-export const useLessonQuery = (lessonId: string | null) =>
+export const useLessonQuery = (lessonId: string | null | undefined) =>
   useQuery<Lesson, Error>({
     queryKey: ['lesson', lessonId],
     queryFn: () => getLesson(lessonId as string),
     enabled: !!lessonId,
-    refetchInterval: (data) =>
-      data?.generation_status === 'generating' ? 3000 : false,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchInterval: (query) => {
+      const lesson = query.state.data
+      if (!lesson) return false
+      return lesson.generation_status !== 'complete' && lesson.generation_status !== 'failed'
+        ? 5000
+        : false
+    },
   })
 
 export const useRetryLessonGenerationMutation = () =>

@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 from typing import List
 
 from app.vectorstore.client import qdrant_client, LESSON_EMBEDDINGS
@@ -41,34 +42,44 @@ class LessonVectorStore:
                 }
             )
 
-        # Try a few common Qdrant client call patterns
+        # Try a few common Qdrant client call patterns. Prefer awaiting if the
+        # client exposes async coroutines; otherwise run sync calls in a thread.
         if hasattr(qdrant_client, "upsert"):
-            # qdrant_client.upsert(collection_name=..., points=...)
-            await asyncio.to_thread(
-                qdrant_client.upsert,
-                collection_name=LESSON_EMBEDDINGS,
-                points=points,
-            )
+            fn = qdrant_client.upsert
+            if inspect.iscoroutinefunction(fn):
+                await fn(collection_name=LESSON_EMBEDDINGS, points=points)
+            else:
+                await asyncio.to_thread(
+                    fn, collection_name=LESSON_EMBEDDINGS, points=points
+                )
             return
 
         if hasattr(qdrant_client, "points_api") and hasattr(
             qdrant_client.points_api, "upsert"
         ):
-            await asyncio.to_thread(
-                qdrant_client.points_api.upsert,
-                collection_name=LESSON_EMBEDDINGS,
-                points=points,
-            )
+            fn = qdrant_client.points_api.upsert
+            if inspect.iscoroutinefunction(fn):
+                await fn(collection_name=LESSON_EMBEDDINGS, points=points)
+            else:
+                await asyncio.to_thread(
+                    fn, collection_name=LESSON_EMBEDDINGS, points=points
+                )
             return
 
         # Fallback: try upload_collection (older/newer APIs)
         if hasattr(qdrant_client, "upload_collection"):
-            await asyncio.to_thread(
-                qdrant_client.upload_collection,
-                collection_name=LESSON_EMBEDDINGS,
-                vectors=vectors,
-                payload=points,
-            )
+            fn = qdrant_client.upload_collection
+            if inspect.iscoroutinefunction(fn):
+                await fn(
+                    collection_name=LESSON_EMBEDDINGS, vectors=vectors, payload=points
+                )
+            else:
+                await asyncio.to_thread(
+                    fn,
+                    collection_name=LESSON_EMBEDDINGS,
+                    vectors=vectors,
+                    payload=points,
+                )
             return
 
         raise NotImplementedError(
