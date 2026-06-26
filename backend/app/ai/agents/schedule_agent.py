@@ -28,6 +28,7 @@ class ScheduleAgent:
         all_lessons: list[dict],
         feedback: str = "",
         current_week_start: str = "",
+        current_datetime: str = "",
     ):
         payload = {
             "profile_summary": profile_summary,
@@ -37,6 +38,7 @@ class ScheduleAgent:
             "all_lessons": json.dumps(all_lessons, indent=2, default=str),
             "feedback": feedback or "",
             "current_week_start": current_week_start,
+            "current_datetime": current_datetime or "",
         }
         try:
             return await self.chain.ainvoke(payload)

@@ -77,6 +77,7 @@ class ScheduleService:
         profile_summary = self._profile_summary(profile, hobbies)
         subjects_summary = self._subjects_summary(subjects)
 
+        current_datetime = utcnow().isoformat()
         schedule_agent = get_schedule_agent()
         schedule_output = await schedule_agent.generate(
             profile_summary=profile_summary,
@@ -86,6 +87,7 @@ class ScheduleService:
             all_lessons=lessons,
             feedback=feedback,
             current_week_start=current_week_start.isoformat(),
+            current_datetime=current_datetime,
         )
 
         schedule_entries = self._build_from_agent_output(

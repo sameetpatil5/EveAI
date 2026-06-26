@@ -57,20 +57,22 @@ async def get_state(
             }
         )
 
-    # upcoming schedule
+    # upcoming schedule (lessons only)
     schedule_repo = ScheduleRepository(db)
     schedule_entries = await schedule_repo.get_by_user(user.id)
     upcoming = []
     for entry in schedule_entries[:10]:
-        upcoming.append(
-            {
-                "id": entry.id,
-                "time": entry.start_time.isoformat() if entry.start_time else None,
-                "title": entry.title,
-                "activity_type": entry.activity_type,
-                "related_lesson_id": getattr(entry, "related_lesson_id", None),
-            }
-        )
+        # Only include lessons, not breaks or hobbies
+        if entry.activity_type == "lesson":
+            upcoming.append(
+                {
+                    "id": entry.id,
+                    "time": entry.start_time.isoformat() if entry.start_time else None,
+                    "title": entry.title,
+                    "activity_type": entry.activity_type,
+                    "related_lesson_id": getattr(entry, "related_lesson_id", None),
+                }
+            )
 
     # stats
     insights = InsightsService()

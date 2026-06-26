@@ -22,6 +22,18 @@ function formatTime(dateString: string) {
   return new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
+function getStatusForEntry(entry: ScheduleEntry): string {
+  // If entry is still pending and end_time has passed, mark as overdue
+  if (entry.status === 'pending') {
+    const endTime = new Date(entry.end_time).getTime()
+    const now = new Date().getTime()
+    if (endTime < now) {
+      return 'overdue'
+    }
+  }
+  return entry.status
+}
+
 export default function SchedulePage() {
   const [open, setOpen] = useState(false)
   const [selectedDayIdx, setSelectedDayIdx] = useState(0)
@@ -122,20 +134,17 @@ export default function SchedulePage() {
                           type="button"
                           onClick={(event) => {
                             event.stopPropagation()
-                            if (!entry.related_lesson_id) return
                             updateStatusMutation.mutate({
                               entryId: entry.id,
                               status: entry.status === 'completed' ? 'pending' : 'completed',
                             })
                           }}
-                          disabled={updateStatusMutation.isPending || !entry.related_lesson_id}
+                          disabled={updateStatusMutation.isPending}
                           className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${
-                            entry.related_lesson_id
-                              ? SCHEDULE_STATUS_COLORS[entry.status] ?? 'bg-gray-100 text-gray-700'
-                              : 'bg-slate-100 text-slate-500'
+                            SCHEDULE_STATUS_COLORS[getStatusForEntry(entry)] ?? 'bg-gray-100 text-gray-700'
                           }`}
                         >
-                          {entry.status}
+                          {getStatusForEntry(entry)}
                         </button>
                       </td>
                     </tr>

@@ -24,5 +24,5 @@ export const SCHEDULE_STATUS_COLORS: Record<string, string> = {
   pending: 'bg-blue-100 text-blue-700',
   completed: 'bg-green-100 text-green-700',
   missed: 'bg-red-100 text-red-700',
-  overdue: 'bg-orange-100 text-orange-700',
+  overdue: 'bg-red-100 text-red-700',
 }
