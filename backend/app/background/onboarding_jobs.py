@@ -98,7 +98,9 @@ async def run_post_onboarding_setup(user_id: str, job_id: str) -> None:
                     for act_idx, activity_data in enumerate(
                         getattr(module_data, "activities", []) or []
                     ):
-                        activity_type = getattr(activity_data, "activity_type", "lesson")
+                        activity_type = getattr(
+                            activity_data, "activity_type", "lesson"
+                        )
                         if activity_type == "lesson":
                             await course_repo.create_lesson_metadata(
                                 module.id,

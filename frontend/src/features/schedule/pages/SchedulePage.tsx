@@ -80,7 +80,7 @@ export default function SchedulePage() {
 
   return (
     <div className="min-h-screen bg-[#f8f9fc] p-6">
-      <div className="max-w-5xl mx-auto">
+      <div className="mx-auto flex max-w-5xl flex-col pb-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
           <div>
             <h2 className="text-3xl font-semibold">Weekly Schedule</h2>
@@ -104,9 +104,9 @@ export default function SchedulePage() {
           ))}
         </div>
 
-        <div className="rounded-3xl bg-white shadow-sm border border-[#e6e9f4] overflow-hidden">
-          <div className="max-h-[640px] overflow-y-auto">
-            <table className="w-full text-left border-collapse">
+        <div className="rounded-3xl border border-[#e6e9f4] bg-white shadow-sm overflow-hidden">
+          <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
+            <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="bg-[#f8f9fc]">
                   <th className="sticky top-0 z-20 px-6 py-4 text-sm font-semibold uppercase text-[#64748b] bg-[#f8f9fc]">Time</th>
