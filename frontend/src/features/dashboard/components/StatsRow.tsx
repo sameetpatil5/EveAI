@@ -7,24 +7,24 @@ interface StatsRowProps {
 
 export function StatsRow({ stats }: StatsRowProps) {
   const items = [
-    { label: 'Current Streak', value: stats.current_streak, detail: 'days' },
-    { label: 'Longest Streak', value: stats.longest_streak, detail: 'days' },
-    { label: "Today's Lessons", value: stats.today_lessons_count, detail: 'lessons' },
-    { label: 'Avg Quiz Score', value: `${stats.avg_quiz_score}%`, detail: '' },
-    { label: 'Completion Rate', value: `${stats.completion_rate}%`, detail: '' },
+    { label: 'Total Study Hours', value: '[84h]', detail: '[+6h this week]' },
+    { label: 'Lessons Completed', value: '[47]', detail: '[of 96 total]' },
+    { label: 'Current Streak', value: `${stats.current_streak}d`, detail: '[Best: 18 days]' },
+    { label: 'This Week', value: '[6h]', detail: '[Goal: 10h]' },
   ]
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-1">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((item) => (
-        <Card key={item.label} className="p-5">
-          <div className="text-sm font-medium text-[#64748b]">{item.label}</div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-semibold text-[#0f172a]">{item.value}</span>
-            {item.detail ? <span className="text-sm text-[#64748b]">{item.detail}</span> : null}
+        <Card key={item.label} className="rounded-3xl p-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#64748b]">{item.label}</div>
+          <div className="mt-2">
+            <div className="text-2xl font-semibold text-[#0f172a]">{item.value}</div>
+            <div className="mt-1 text-xs text-[#64748b]">{item.detail}</div>
           </div>
         </Card>
       ))}
     </div>
   )
 }
+

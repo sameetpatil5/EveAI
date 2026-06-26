@@ -1,23 +1,20 @@
 import { useNavigate } from 'react-router-dom'
 import { Card } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
 
-export function QuickActions() {
+interface QuickActionsProps {
+  className?: string
+}
+
+export function QuickActions({ className }: QuickActionsProps) {
   const navigate = useNavigate()
 
   return (
-    <Card className="p-5">
-      <div className="mb-5 text-sm font-medium text-[#475569]">Quick actions</div>
-      <div className="space-y-3">
-        <Button variant="secondary" className="w-full" onClick={() => navigate('/app/quick-ask')}>
-          Quick Ask
-        </Button>
-        <Button variant="secondary" className="w-full" onClick={() => navigate('/app/quick-quiz')}>
-          Quick Quiz
-        </Button>
-        <Button variant="secondary" className="w-full" onClick={() => navigate('/app/subjects')}>
-          Browse Subjects
-        </Button>
+    <Card className={`rounded-3xl p-3 flex flex-col justify-between ${className ?? ''}`}>
+      <div className="mb-3 text-sm font-medium text-[#475569]">Quick Actions</div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <button onClick={() => navigate('/app/quick-ask')} className="rounded-md bg-[#607afb] py-2 text-xs font-semibold text-white">Ask</button>
+        <button onClick={() => navigate('/app/quick-quiz')} className="rounded-md bg-[#10b981] py-2 text-xs font-semibold text-white">Quiz</button>
       </div>
     </Card>
   )
