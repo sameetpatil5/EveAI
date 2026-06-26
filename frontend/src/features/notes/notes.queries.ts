@@ -12,7 +12,19 @@ export const useCreateNoteMutation = () =>
   useMutation({ mutationFn: (data: { title: string; content: string; description?: string; subject_id?: string }) => createNote(data), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notes'] }) })
 
 export const useUpdateNoteMutation = () =>
-  useMutation({ mutationFn: ({ noteId, data }: { noteId: string; data: Partial<any> }) => updateNote(noteId, data), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notes'] }) })
+  useMutation({
+    mutationFn: ({ noteId, data }: { noteId: string; data: Partial<any> }) => updateNote(noteId, data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+      queryClient.invalidateQueries({ queryKey: ['note', variables.noteId] })
+    },
+  })
 
 export const useDeleteNoteMutation = () =>
-  useMutation({ mutationFn: (noteId: string) => deleteNote(noteId), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notes'] }) })
+  useMutation({
+    mutationFn: (noteId: string) => deleteNote(noteId),
+    onSuccess: (_data, noteId) => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] })
+      queryClient.invalidateQueries({ queryKey: ['note', noteId] })
+    },
+  })
