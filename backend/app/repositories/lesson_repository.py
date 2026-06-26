@@ -1,8 +1,12 @@
+from typing import Any
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
 
+from app.models.course import Course, Module
 from app.models.lesson import Lesson, LessonProgress
+from app.models.subject import Subject
 from app.utils.helpers import utcnow
 
 
@@ -65,6 +69,47 @@ class LessonRepository:
             )
         )
         await self.db.commit()
+
+    async def get_lessons_for_user(self, user_id: str) -> list[dict[str, Any]]:
+        result = await self.db.execute(
+            select(
+                Lesson.id,
+                Lesson.title,
+                Lesson.lesson_order,
+                Module.module_order.label("module_order"),
+                Course.subject_id.label("subject_id"),
+                Subject.name.label("subject_name"),
+                Subject.priority.label("subject_priority"),
+                LessonProgress.completed.label("completed"),
+            )
+            .join(Module, Lesson.module_id == Module.id)
+            .join(Course, Module.course_id == Course.id)
+            .join(Subject, Course.subject_id == Subject.id)
+            .outerjoin(
+                LessonProgress,
+                (LessonProgress.lesson_id == Lesson.id)
+                & (LessonProgress.user_id == user_id),
+            )
+            .order_by(Subject.priority.desc(), Module.module_order, Lesson.lesson_order)
+        )
+
+        lessons = []
+        for row in result.all():
+            lessons.append(
+                {
+                    "id": row.id,
+                    "title": row.title,
+                    "lesson_order": row.lesson_order,
+                    "module_order": row.module_order,
+                    "subject_id": row.subject_id,
+                    "subject_name": row.subject_name,
+                    "subject_priority": row.subject_priority,
+                    "completed": (
+                        bool(row.completed) if row.completed is not None else False
+                    ),
+                }
+            )
+        return lessons
 
     async def get_progress(self, user_id: str, lesson_id: str) -> LessonProgress | None:
         result = await self.db.execute(

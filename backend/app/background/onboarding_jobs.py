@@ -126,110 +126,15 @@ async def run_post_onboarding_setup(user_id: str, job_id: str) -> None:
             try:
                 logger.info("Generating schedule")
 
-                from app.ai.agents import get_schedule_agent
+                from app.services.schedule_service import ScheduleService
 
-                schedule_agent = get_schedule_agent()
-                schedule_output = await schedule_agent.generate(
-                    subjects_summary=[s.__dict__ for s in subjects],
-                    available_slots=getattr(profile, "available_time_slots", []) or [],
-                    all_lessons=[],
+                service = ScheduleService()
+                schedule_entries = await service.build_weekly_schedule_entries(
+                    user_id, db
                 )
-
-                # Bulk insert schedule entries
-                # schedule_output is expected to be a list of schedule entry dicts
-                schedule_entries = []
-
-                def _weekday_from_name(name: str) -> int | None:
-                    if not name:
-                        return None
-                    n = name.strip().lower()
-                    mapping = {
-                        "monday": 0,
-                        "mon": 0,
-                        "tuesday": 1,
-                        "tue": 1,
-                        "wednesday": 2,
-                        "wed": 2,
-                        "thursday": 3,
-                        "thu": 3,
-                        "friday": 4,
-                        "fri": 4,
-                        "saturday": 5,
-                        "sat": 5,
-                        "sunday": 6,
-                        "sun": 6,
-                    }
-                    return mapping.get(n)
-
-                def _to_next_datetime_for_weekday(weekday: int, hhmm: str) -> datetime:
-                    now = utcnow()
-                    today = now.date()
-                    target = (weekday - today.weekday()) % 7
-                    # if today and time already passed, schedule next week
-                    hh, mm = (int(x) for x in hhmm.split(":"))
-                    candidate_date = today + timedelta(days=target)
-                    candidate_dt = datetime.combine(
-                        candidate_date, time(hh, mm), tzinfo=timezone.utc
-                    )
-                    if candidate_dt <= now:
-                        candidate_date = candidate_date + timedelta(days=7)
-                        candidate_dt = datetime.combine(
-                            candidate_date, time(hh, mm), tzinfo=timezone.utc
-                        )
-                    return candidate_dt
-
-                entries_iter = (
-                    schedule_output
-                    if isinstance(schedule_output, list)
-                    else getattr(schedule_output, "entries", [])
-                )
-
-                schedule_repo = ScheduleRepository(db)
-
-                for entry in entries_iter:
-                    entry_dict = (
-                        entry.model_dump() if hasattr(entry, "model_dump") else entry
-                    )
-                    # map day_of_week + HH:MM strings to concrete datetimes (UTC)
-                    day_name = entry_dict.get("day_of_week") or entry_dict.get("day")
-                    start_time_str = entry_dict.get("start_time")
-                    end_time_str = entry_dict.get("end_time")
-
-                    weekday = _weekday_from_name(day_name)
-                    if weekday is None or not start_time_str or not end_time_str:
-                        logger.warning(
-                            "Skipping schedule entry with missing day/time: %s",
-                            entry_dict,
-                        )
-                        continue
-
-                    try:
-                        start_dt = _to_next_datetime_for_weekday(
-                            weekday, start_time_str
-                        )
-                        end_dt = _to_next_datetime_for_weekday(weekday, end_time_str)
-                    except Exception:
-                        logger.exception(
-                            "Failed parsing schedule times: %s", entry_dict
-                        )
-                        continue
-
-                    schedule_entries.append(
-                        {
-                            "id": generate_uuid(),
-                            "user_id": user_id,
-                            "title": entry_dict.get("title", "Study Session"),
-                            "start_time": start_dt,
-                            "end_time": end_dt,
-                            "activity_type": entry_dict.get("activity_type", "study"),
-                            "related_subject_id": entry_dict.get("related_subject_id"),
-                            "related_lesson_id": entry_dict.get("related_lesson_id"),
-                            "related_quiz_id": entry_dict.get("related_quiz_id"),
-                            "status": "pending",
-                        }
-                    )
 
                 if schedule_entries:
+                    schedule_repo = ScheduleRepository(db)
                     await schedule_repo.bulk_insert(schedule_entries)
                     logger.info(f"Created {len(schedule_entries)} schedule entries")
             except Exception as e:
