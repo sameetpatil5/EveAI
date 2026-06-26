@@ -1,5 +1,4 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.redis import get_json, set_json
 from app.repositories.lesson_repository import LessonRepository
 from app.repositories.user_repository import UserRepository
 from app.vectorstore.lesson_store import lesson_store
@@ -62,13 +61,28 @@ class ChatService:
         return TutorChatResponse.model_validate({"session_id": sid, "response": reply})
 
     async def quick_ask(
-        self, user_id: str, message: str, subject_id: str | None, db: AsyncSession
+        self,
+        user_id: str,
+        message: str,
+        db: AsyncSession,
     ) -> QuickAskResponse:
         user_repo = UserRepository(db)
         profile = await user_repo.get_profile(user_id)
-        llm = get_llm()
-        prompt = (
-            f"User level: {getattr(profile, 'academic_level', '')}\nQuestion: {message}"
+        hobbies = await user_repo.get_hobbies(user_id) or []
+
+        # retrieve relevant chunks across lessons/courses
+        chunks = await lesson_store.search(message, None)
+
+        from app.ai.agents import get_tutor_agent
+
+        agent = get_tutor_agent()
+        reply = await agent.chat(
+            message=message,
+            lesson_content="",
+            chat_history=[],
+            retrieved_chunks=chunks,
+            user_level=getattr(profile, "academic_level", ""),
+            hobbies=hobbies,
         )
-        raw = await llm.ainvoke(prompt)
-        return QuickAskResponse.model_validate({"response": raw})
+
+        return QuickAskResponse.model_validate({"response": reply})

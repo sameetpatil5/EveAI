@@ -16,8 +16,8 @@ export default function LearningLayout() {
   }, [params.courseId])
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc] overflow-hidden">
-      <div className="mx-auto max-w-7xl h-screen px-4 py-6">
+    <div className="h-full min-h-0 flex flex-1 flex-col bg-[#f8f9fc] overflow-hidden">
+      <div className="mx-auto flex h-full min-h-0 w-full max-w-7xl flex-1 flex-col px-4 py-6">
         <div className="grid h-full min-h-0 grid-cols-[280px_minmax(0,1fr)_320px] gap-6">
           <aside className="hidden md:flex h-full min-h-0">
             <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#e9eaf2] bg-white">

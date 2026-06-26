@@ -24,9 +24,11 @@ const App: React.FC = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="h-screen min-h-screen flex flex-col bg-gray-50 text-gray-900">
       <Navbar />
-      <AppRoutes />
+      <main className="flex-1 min-h-0 overflow-hidden">
+        <AppRoutes />
+      </main>
     </div>
   )
 }

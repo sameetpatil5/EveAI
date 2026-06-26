@@ -31,5 +31,5 @@ async def quick_ask(
     db: AsyncSession = Depends(get_db),
 ):
     service = ChatService()
-    result = await service.quick_ask(user.id, data.message, data.subject_id, db)
+    result = await service.quick_ask(user.id, data.message, db)
     return success_response(result.model_dump())

@@ -16,7 +16,6 @@ class TutorChatResponse(BaseModel):
 
 class QuickAskRequest(BaseModel):
     message: str
-    subject_id: Optional[str] = None
 
 
 class QuickAskResponse(BaseModel):

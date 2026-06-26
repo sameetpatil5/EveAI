@@ -9,7 +9,7 @@ export function QuickActions() {
     <Card className="p-5">
       <div className="mb-5 text-sm font-medium text-[#475569]">Quick actions</div>
       <div className="space-y-3">
-        <Button variant="secondary" className="w-full" onClick={() => navigate('/app/notes')}>
+        <Button variant="secondary" className="w-full" onClick={() => navigate('/app/quick-ask')}>
           Quick Ask
         </Button>
         <Button variant="secondary" className="w-full" onClick={() => navigate('/app/quick-quiz')}>
