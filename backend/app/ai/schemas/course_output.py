@@ -1,16 +1,18 @@
 from pydantic import BaseModel
 
 
-class LessonMetadataOutput(BaseModel):
+class ActivityMetadataOutput(BaseModel):
     title: str
-    lesson_order: int
+    activity_order: int
+    activity_type: str
+    estimated_minutes: int
+    resources: list[str] | None = None
 
 
 class ModuleOutput(BaseModel):
     title: str
-    description: str
     module_order: int
-    lessons: list[LessonMetadataOutput]
+    activities: list[ActivityMetadataOutput] | None = None
 
 
 class CourseStructureOutput(BaseModel):

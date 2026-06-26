@@ -14,8 +14,11 @@ export const ACADEMIC_LEVELS = [
 export const SUBJECT_LEVELS = ['beginner', 'intermediate', 'advanced']
 
 export const ACTIVITY_TYPE_LABELS: Record<string, string> = {
-  study: 'Study',
+  lesson: 'Lesson',
   quiz: 'Quiz',
+  review: 'Review',
+  practice: 'Practice',
+  study: 'Study',
   break: 'Break',
   hobby: 'Hobby Time',
 }

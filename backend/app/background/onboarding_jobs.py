@@ -94,22 +94,39 @@ async def run_post_onboarding_setup(user_id: str, job_id: str) -> None:
                         },
                     )
 
-                    # Save lessons for this module
-                    for les_idx, lesson_data in enumerate(
-                        getattr(module_data, "lessons", [])
+                    # Save lesson-style activities as lesson metadata
+                    for act_idx, activity_data in enumerate(
+                        getattr(module_data, "activities", []) or []
                     ):
-                        await course_repo.create_lesson_metadata(
-                            module.id,
-                            {
-                                "title": getattr(
-                                    lesson_data, "title", f"Lesson {les_idx + 1}"
-                                ),
-                                "lesson_order": getattr(
-                                    lesson_data, "lesson_order", les_idx + 1
-                                ),
-                                "generation_status": "pending",
-                            },
-                        )
+                        activity_type = getattr(activity_data, "activity_type", "lesson")
+                        if activity_type == "lesson":
+                            await course_repo.create_lesson_metadata(
+                                module.id,
+                                {
+                                    "title": getattr(
+                                        activity_data, "title", f"Lesson {act_idx + 1}"
+                                    ),
+                                    "lesson_order": getattr(
+                                        activity_data, "activity_order", act_idx + 1
+                                    ),
+                                    "generation_status": "pending",
+                                },
+                            )
+                        elif activity_type == "quiz":
+                            from app.repositories.quiz_repository import QuizRepository
+
+                            quiz_repo = QuizRepository(db)
+                            await quiz_repo.create_quiz(
+                                {
+                                    "module_id": module.id,
+                                    "title": getattr(
+                                        activity_data,
+                                        "title",
+                                        f"Module {module.module_order} Assessment",
+                                    ),
+                                    "passing_score": 70,
+                                }
+                            )
 
                 all_courses.append(course)
                 logger.info(f"Course generated for subject {subject.name}")

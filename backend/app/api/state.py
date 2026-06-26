@@ -57,13 +57,14 @@ async def get_state(
             }
         )
 
-    # upcoming schedule (lessons only)
+    # upcoming schedule (academic activities only: lessons, quizzes, reviews, practice)
     schedule_repo = ScheduleRepository(db)
     schedule_entries = await schedule_repo.get_by_user(user.id)
     upcoming = []
+    academic_types = {"lesson", "quiz", "review", "practice"}
     for entry in schedule_entries[:10]:
-        # Only include lessons, not breaks or hobbies
-        if entry.activity_type == "lesson":
+        # Only include academic activities, exclude breaks and hobbies
+        if entry.activity_type in academic_types:
             upcoming.append(
                 {
                     "id": entry.id,
