@@ -1,7 +1,7 @@
 export interface QuizQuestion {
   id: string
   question_text: string
-  question_type: 'mcq' | 'truefalse' | 'subjective'
+  question_type: 'mcq' | 'true_false' | 'subjective'
   options?: string[]
 }
 
@@ -16,5 +16,11 @@ export interface QuizResult {
   score: number
   passed: boolean
   feedback?: string
-  question_results: Array<{ question_id: string; correct: boolean; feedback?: string }>
+  question_results: Array<{
+    question_id: string
+    correct: boolean
+    feedback?: string
+    detail?: string
+    reason?: string
+  }>
 }

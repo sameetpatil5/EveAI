@@ -33,7 +33,7 @@ export default function QuizQuestion({
           </div>
         )}
 
-        {question.question_type === 'truefalse' && (
+        {question.question_type === 'true_false' && (
           <div className="flex gap-3">
             {['True', 'False'].map((opt) => (
               <MCQOption key={opt} option={opt} selected={answer === opt} onClick={() => onAnswer(opt)} />

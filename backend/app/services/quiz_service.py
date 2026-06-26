@@ -2,6 +2,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.quiz_repository import QuizRepository
 from app.core.exceptions import NotFoundError
 from app.schemas.quiz import QuizResponse, QuizResultResponse
+from app.utils.helpers import generate_uuid
+from app.utils.logger import logger
+from app.utils.logger import logger
 
 
 class QuizService:
@@ -19,17 +22,25 @@ class QuizService:
         quiz_data = await quiz_agent.generate(
             content=module_id, difficulty=difficulty, question_count=question_count
         )
-        # persist
         repo = QuizRepository(db)
-        quiz = await repo.create_quiz(quiz_data.model_dump())
-        await repo.create_questions(
-            quiz.id, [q.model_dump() for q in quiz_data.questions]
+        quiz = await repo.create_quiz(
+            {
+                "title": getattr(quiz_data, "title", "Module Quiz"),
+                "module_id": module_id,
+            }
         )
+        questions_data = []
+        for q in quiz_data.questions:
+            q_data = q.model_dump()
+            if not q_data.get("id"):
+                q_data["id"] = generate_uuid()
+            questions_data.append(q_data)
+        await repo.create_questions(quiz.id, questions_data)
         return QuizResponse.model_validate(
             {
                 "id": quiz.id,
                 "title": getattr(quiz, "title", "Module Quiz"),
-                "questions": quiz_data.questions,
+                "questions": questions_data,
             }
         )
 
@@ -48,15 +59,21 @@ class QuizService:
             content=subject_id, difficulty=difficulty, question_count=question_count
         )
         repo = QuizRepository(db)
-        quiz = await repo.create_quiz(quiz_data.model_dump())
-        await repo.create_questions(
-            quiz.id, [q.model_dump() for q in quiz_data.questions]
+        quiz = await repo.create_quiz(
+            {"title": getattr(quiz_data, "title", "Quick Quiz")}
         )
+        questions_data = []
+        for q in quiz_data.questions:
+            q_data = q.model_dump()
+            if not q_data.get("id"):
+                q_data["id"] = generate_uuid()
+            questions_data.append(q_data)
+        await repo.create_questions(quiz.id, questions_data)
         return QuizResponse.model_validate(
             {
                 "id": quiz.id,
                 "title": getattr(quiz, "title", "Quick Quiz"),
-                "questions": quiz_data.questions,
+                "questions": questions_data,
             }
         )
 
@@ -87,10 +104,10 @@ class QuizService:
                     }
                 )
                 continue
-            if getattr(q, "question_type", "") in ("mcq", "true_false"):
+            if getattr(q, "question_type", "") in ("mcq", "true_false", "truefalse"):
                 if (
                     ans.answer.strip().lower()
-                    == getattr(q, "expected_answer", "").strip().lower()
+                    == getattr(q, "correct_answer", "").strip().lower()
                 ):
                     correct += 1
                     feedbacks.append({"question_id": ans.question_id, "correct": True})
@@ -98,17 +115,30 @@ class QuizService:
                     feedbacks.append({"question_id": ans.question_id, "correct": False})
             else:
                 # subjective
-                eval_out = await evaluation_agent.evaluate(
-                    q.question_text, getattr(q, "expected_answer", ""), ans.answer
-                )
-                is_correct = getattr(eval_out, "is_correct", False)
+                try:
+                    eval_out = await evaluation_agent.evaluate(
+                        q.question_text, getattr(q, "correct_answer", ""), ans.answer
+                    )
+                    is_correct = getattr(eval_out, "is_correct", False)
+                    detail = getattr(eval_out, "explanation", None)
+                except Exception as e:
+                    logger.error(
+                        f"Quiz subjective evaluation failed for quiz={quiz_id} question={q.id}: {e}",
+                        exc_info=True,
+                    )
+                    is_correct = False
+                    detail = (
+                        "Unable to evaluate this subjective answer at this time. "
+                        "Please try again later."
+                    )
+
                 if is_correct:
                     correct += 1
                 feedbacks.append(
                     {
                         "question_id": ans.question_id,
                         "correct": is_correct,
-                        "detail": getattr(eval_out, "explanation", None),
+                        "detail": detail,
                     }
                 )
 
@@ -119,6 +149,7 @@ class QuizService:
                 "quiz_id": quiz_id,
                 "user_id": user_id,
                 "score": score,
+                "passed": passed,
                 "answers": [a.model_dump() for a in answers],
             }
         )

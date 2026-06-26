@@ -3,7 +3,7 @@ import { useQuizStore } from '../quiz.store'
 
 export default function QuizResults({ result }: { result: QuizResult }) {
   const reset = useQuizStore((s) => s.reset)
-  const pct = Math.round((result.score || 0) * 100)
+  const pct = Math.round(result.score)
   return (
     <div className="space-y-4">
       <div className="text-center">
@@ -19,7 +19,8 @@ export default function QuizResults({ result }: { result: QuizResult }) {
         <ul className="space-y-2">
           {result.question_results.map((q) => (
             <li key={q.question_id} className="text-sm text-[#475569]">
-              {q.question_id}: {q.correct ? 'Correct' : 'Incorrect'} {q.feedback ? `— ${q.feedback}` : ''}
+              {q.question_id}: {q.correct ? 'Correct' : 'Incorrect'}
+              {q.feedback ? ` — ${q.feedback}` : q.detail ? ` — ${q.detail}` : q.reason ? ` — ${q.reason}` : ''}
             </li>
           ))}
         </ul>

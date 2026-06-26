@@ -17,6 +17,7 @@ const CoursePage = lazy(() => import('@/features/course/pages/CoursePage'))
 const LessonPage = lazy(() => import('@/features/lesson/pages/LessonPage'))
 const ModuleQuizPage = lazy(() => import('@/features/quiz/pages/ModuleQuizPage'))
 const QuickQuizPage = lazy(() => import('@/features/quiz/pages/QuickQuizPage'))
+const QuickQuizTakePage = lazy(() => import('@/features/quiz/pages/TakeQuizPage'))
 const QuickAskPage = lazy(() => import('@/features/tutor/pages/QuickAskPage'))
 
 const AuthLayout = lazy(() => import('@/app/layouts/AuthLayout'))
@@ -46,6 +47,7 @@ export default function AppRoutes() {
             <Route path="/app/profile" element={<ProfilePage />} />
             <Route path="/app/quiz/:quizId" element={<ModuleQuizPage />} />
             <Route path="/app/quick-quiz" element={<QuickQuizPage />} />
+            <Route path="/app/quick-quiz/take/:quizId" element={<QuickQuizTakePage />} />
           </Route>
           <Route element={<LearningLayout />}>
             <Route path="/app/course/:courseId" element={<CoursePage />} />

@@ -1,6 +1,6 @@
 from app.core.exceptions import AIGenerationError
 from app.ai.schemas.quiz_output import EvaluationOutput
-from app.ai.prompts.quiz_prompts import QUIZ_GENERATION_PROMPT
+from app.ai.prompts.quiz_evaluation_prompts import QUIZ_EVALUATION_PROMPT
 
 
 class QuizEvaluationAgent:
@@ -8,7 +8,7 @@ class QuizEvaluationAgent:
         from app.ai.base import get_llm
 
         self.llm = (llm or get_llm()).with_structured_output(EvaluationOutput)
-        self.prompt = QUIZ_GENERATION_PROMPT
+        self.prompt = QUIZ_EVALUATION_PROMPT
         self.chain = self.prompt | self.llm
 
     async def evaluate(self, question: str, expected_answer: str, user_answer: str):

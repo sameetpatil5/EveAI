@@ -19,7 +19,9 @@ class Quiz(Base):
     __tablename__ = "quizzes"
 
     id = Column(String, primary_key=True, default=generate_uuid)
-    module_id = Column(String, ForeignKey("modules.id", ondelete="CASCADE"), nullable=True)
+    module_id = Column(
+        String, ForeignKey("modules.id", ondelete="CASCADE"), nullable=True
+    )
     title = Column(String, nullable=False)
     passing_score = Column(Integer, default=70)
 
@@ -50,6 +52,7 @@ class QuizAttempt(Base):
     score = Column(Float, nullable=False)
     passed = Column(Boolean, nullable=False)
     attempt_number = Column(Integer, default=1)
+    answers = Column(JSON, nullable=True)
     feedback = Column(Text, nullable=True)
     submitted_at = Column(DateTime(timezone=True), default=utcnow)
 

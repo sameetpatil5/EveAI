@@ -3,8 +3,9 @@ from pydantic import BaseModel
 
 
 class QuestionOutput(BaseModel):
+    id: str
     question_text: str
-    question_type: str  # mcq, truefalse, subjective
+    question_type: str  # mcq, true_false, subjective
     options: Optional[list[str]]
     correct_answer: str
     explanation: str
@@ -16,5 +17,5 @@ class QuizOutput(BaseModel):
 
 
 class EvaluationOutput(BaseModel):
-    score: float  # 0-100
-    feedback: str
+    is_correct: bool
+    explanation: str
