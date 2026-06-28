@@ -8,7 +8,7 @@ from app.schemas.auth import AuthResponse, UserOut
 
 class AuthService:
     async def register(
-        self, email: str, password: str, db: AsyncSession
+        self, email: str, password: str, db: AsyncSession, full_name: str | None = None
     ) -> AuthResponse:
         user_repo = UserRepository(db)
 
@@ -22,8 +22,12 @@ class AuthService:
         password_hash = hash_password(password)
         user = await user_repo.create(email=email, password_hash=password_hash)
 
+        profile_data = {}
+        if full_name:
+            profile_data["full_name"] = full_name
+
         # create an empty profile row (repository handles create/upsert semantics)
-        await user_repo.upsert_profile(user.id, {})
+        await user_repo.upsert_profile(user.id, profile_data)
 
         token = create_token(user.id, user.email)
         user_out = UserOut(
