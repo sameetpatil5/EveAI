@@ -3,29 +3,29 @@ import { Link } from 'react-router-dom'
 const TEAM = [
   {
     name: 'Kartik Dani',
-    role: 'Full-Stack & AI Integration',
-    bio: 'Focused on bridging the AI layer with the frontend experience, ensuring every insight from the LLM reaches the learner intuitively.',
+    role: 'Product Management',
+    bio: 'Shapes the product vision, aligning AI capabilities with an intuitive and seamless learning experience.',
     initials: 'KD',
     color: '#607afb',
   },
   {
     name: 'Sameet Patil',
-    role: 'Backend & Scheduling Engine',
-    bio: 'Designed the intelligent scheduling heuristic that balances academics, hobbies, and rest without overwhelming the learner.',
+    role: 'Backend & AI Architecture',
+    bio: 'Designs the AI infrastructure and intelligent systems that power personalized, adaptive learning.',
     initials: 'SP',
     color: '#7c3aed',
   },
   {
     name: 'Siddhant Ingole',
-    role: 'AI Architecture & RAG Pipeline',
-    bio: 'Built the vector-based semantic retrieval pipeline using Qdrant that powers context-aware tutoring and memory.',
+    role: 'Frontend & API Design',
+    bio: 'Builds responsive interfaces and robust APIs, ensuring a smooth and connected user experience.',
     initials: 'SI',
     color: '#0ea5e9',
   },
   {
     name: 'Samruddhi Shende',
     role: 'Research & UX Design',
-    bio: 'Grounded EveAI in educational psychology research — ensuring the platform supports well-being alongside academic outcomes.',
+    bio: 'Transforms educational research into learner-centered experiences that are engaging, effective, and accessible.',
     initials: 'SS',
     color: '#10b981',
   },
@@ -60,7 +60,7 @@ const TECH_HIGHLIGHTS = [
 
 export default function AboutPage() {
   return (
-    <div className="h-full overflow-y-auto bg-[#f8fafc] px-4 py-8 text-slate-900">
+    <div className="hide-scrollbar h-full overflow-y-auto bg-[#f8fafc] px-4 py-8 text-slate-900">
       <section className="mx-auto w-full max-w-6xl">
         <div className="rounded-[32px] border border-[#e9eaf2] bg-white px-8 py-12 text-center shadow-sm sm:px-14">
           <span className="inline-block rounded-full border border-[#e0e3ff] bg-[#eef0ff] px-4 py-1 text-xs font-semibold uppercase tracking-widest text-[#607afb]">
@@ -191,7 +191,7 @@ export default function AboutPage() {
       </section>
 
       <footer className="mx-auto mt-8 w-full max-w-6xl pb-4 text-center text-xs text-[#94a3b8]">
-        © {new Date().getFullYear()} EveAI. Built with ❤️ by Kartik, Sameet, Siddhant &amp; Samruddhi.
+        © {new Date().getFullYear()} EveAI. Built with ❤️ by the EveAI team.
       </footer>
     </div>
   )

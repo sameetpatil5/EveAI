@@ -13,14 +13,14 @@ const CONTACT_DETAILS = [
   {
     icon: '✉️',
     label: 'Email us',
-    value: 'team@eveai.dev',
-    href: 'mailto:team@eveai.dev',
+    value: 'teameveai@gmail.com',
+    href: 'mailto:teameveai@gmail.com',
   },
   {
     icon: '🐙',
-    label: 'GitHub',
-    value: 'github.com/eveai',
-    href: 'https://github.com/eveai',
+    label: 'GitHub repo',
+    value: 'EveAI',
+    href: 'https://github.com/sameetpatil5/EveAI',
   },
   {
     icon: '📍',
@@ -71,7 +71,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="h-full overflow-y-auto bg-[#f8fafc] px-4 py-8 text-slate-900">
+    <div className="hide-scrollbar h-full overflow-y-auto bg-[#f8fafc] px-4 py-8 text-slate-900">
       <section className="mx-auto w-full max-w-6xl">
         <div className="rounded-[32px] border border-[#e9eaf2] bg-white px-8 py-12 text-center shadow-sm sm:px-14">
           <span className="inline-block rounded-full border border-[#e0e3ff] bg-[#eef0ff] px-4 py-1 text-xs font-semibold uppercase tracking-widest text-[#607afb]">
@@ -239,7 +239,7 @@ export default function ContactPage() {
       </section>
 
       <footer className="mx-auto mt-8 w-full max-w-6xl pb-4 text-center text-xs text-[#94a3b8]">
-        © {new Date().getFullYear()} EveAI. Built with ❤️ by Kartik, Sameet, Siddhant &amp; Samruddhi.
+        © {new Date().getFullYear()} EveAI. Built with ❤️ by the EveAI team.
       </footer>
     </div>
   )
