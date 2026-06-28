@@ -47,6 +47,7 @@ export default function TakeQuizPage() {
   if (result) {
     return (
       <div className="mx-auto w-full max-w-6xl px-4 py-2">
+        {/* <Card className="p-6 max-h-[calc(100vh-8rem)] overflow-auto"> */}
         <Card className="p-6">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>

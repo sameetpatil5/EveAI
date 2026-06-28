@@ -25,7 +25,7 @@ export default function QuizResults({ result }: { result: QuizResult }) {
       )}
 
       {hasQuestionFeedback && (
-        <div className="rounded-2xl border border-[#e9eaf2] bg-white p-5">
+        <div className="rounded-2xl border border-[#e9eaf2] bg-white p-5 max-h-[50vh] overflow-y-auto">
           <div className="mb-3 font-medium text-slate-800">Question Review</div>
           <ul className="space-y-4">
             {result.question_results.map((q) => {
