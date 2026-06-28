@@ -1,3 +1,6 @@
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
 interface LessonReferencesProps {
   references?: string[]
   youtubeLinks?: string[]
@@ -11,10 +14,14 @@ export function LessonReferences({ references, youtubeLinks }: LessonReferencesP
       <div className="text-sm font-medium text-[#475569]">Resources</div>
       <div className="mt-3 space-y-2 text-sm text-[#0f172a]">
         {references?.map((r) => (
-          <div key={r}><a className="text-[#2563eb] underline" href={r} target="_blank" rel="noreferrer">{r}</a></div>
+          <div key={r} className="prose prose-sm max-w-none text-sm">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{`- [${r}](${r})`}</ReactMarkdown>
+          </div>
         ))}
         {youtubeLinks?.map((y) => (
-          <div key={y}><a className="text-[#2563eb] underline" href={y} target="_blank" rel="noreferrer">{y}</a></div>
+          <div key={y} className="prose prose-sm max-w-none text-sm">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{`- [${y}](${y})`}</ReactMarkdown>
+          </div>
         ))}
       </div>
     </div>

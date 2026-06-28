@@ -19,10 +19,10 @@ export function ModuleSection({ module, activeLessonId, onLessonClick }: ModuleS
   }, [activeLessonId, module.lessons, open])
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left hover:bg-slate-50"
+        className="flex w-full items-center justify-between rounded-md px-2 py-1 text-left hover:bg-slate-50"
       >
         <div>
           <div className="text-sm font-medium text-[#0f172a]">{module.title}</div>
@@ -32,7 +32,7 @@ export function ModuleSection({ module, activeLessonId, onLessonClick }: ModuleS
       </button>
 
       {open ? (
-        <div className="space-y-1 pl-2">
+        <div className="space-y-1 pl-1">
           {module.lessons.map((lesson) => (
             <LessonItem
               key={lesson.id}

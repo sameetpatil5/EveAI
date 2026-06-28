@@ -21,8 +21,8 @@ export function LessonItem({ lesson, locked = false, active = false, onClick }: 
       </div>
       <div className="flex items-center gap-3">
         {lesson.completed ? (
-          <div className="flex items-center gap-2 rounded-full bg-green-100 px-2 py-1 text-sm text-green-700">
-            <Check size={14} /> Completed
+          <div className="flex items-center justify-center rounded-full bg-green-100 p-1 text-green-700">
+            <Check size={14} />
           </div>
         ) : null}
         {locked ? <Lock size={16} className="text-[#64748b]" /> : null}
