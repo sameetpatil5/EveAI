@@ -1,23 +1,15 @@
-import type { Insights } from '../insights.types'
+import { Card } from '@/components/ui/Card'
 
-export default function ProgressChart({ weeklyData }: { weeklyData: Insights['weekly_study_hours'] }) {
-  const maxHours = Math.max(...weeklyData.map((item: { date: string; hours: number }) => item.hours), 1)
+export default function ProgressChart() {
   return (
-    <div className="rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
-      <div className="mb-4 text-sm font-medium text-[#0f172a]">Weekly study hours</div>
-      <div className="space-y-3">
-        {weeklyData.map((item: { date: string; hours: number }) => (
-          <div key={item.date} className="space-y-2">
-            <div className="flex items-center justify-between text-xs text-[#64748b]">
-              <span>{new Date(item.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-              <span>{item.hours}h</span>
-            </div>
-            <div className="h-3 rounded-full bg-[#e2e8f0]">
-              <div className="h-3 rounded-full bg-[#607afb]" style={{ width: `${(item.hours / maxHours) * 100}%` }} />
-            </div>
-          </div>
-        ))}
+    <Card className="rounded-3xl p-6 flex flex-col h-full">
+      <div className="mb-6 text-sm font-medium text-[#475569]">Weekly Study Hours</div>
+      <div className="flex-1 min-h-0 flex items-center justify-center">
+        {/* [Graph placeholder - will be replaced with actual chart] */}
+        <div className="text-center text-[#94a3b8]">
+          <div className="text-sm">[Graph visualization coming soon]</div>
+        </div>
       </div>
-    </div>
+    </Card>
   )
 }
