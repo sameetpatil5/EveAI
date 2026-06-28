@@ -8,13 +8,13 @@ interface WelcomeSectionProps {
 export function WelcomeSection({ name, stats }: WelcomeSectionProps) {
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
-  const scheduledLessons = stats.today_lessons_count ?? 3
-  const streak = stats.current_streak ?? 12
+  const scheduledLessons = stats.today_lessons_count ?? 0
+  const streak = stats.current_streak ?? 0
 
   return (
-    <div className="rounded-3xl border border-[#e9eaf2] bg-white p-4 shadow-sm">
-      <div className="grid gap-6 xl:grid-cols-[1.7fr_1fr]">
-        <div className="space-y-2">
+    <div className="rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
+      <div className="grid gap-6 xl:grid-cols-[1.8fr_1fr]">
+        <div className="space-y-3">
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">
             {greeting}
           </div>
@@ -25,17 +25,17 @@ export function WelcomeSection({ name, stats }: WelcomeSectionProps) {
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-2xl bg-[#f8f9fc] p-2 text-center">
-            <div className="text-xl font-semibold text-[#0f172a]">{streak ?? '[12]'}</div>
+          <div className="rounded-2xl bg-[#f8f9fc] p-4 text-center">
+            <div className="text-xl font-semibold text-[#0f172a]">{streak}</div>
             <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#64748b]">Day Streak</div>
           </div>
-          <div className="rounded-3xl bg-[#f8f9fc] p-3 text-center">
-            <div className="text-xl font-semibold text-[#0f172a]">[47]</div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#64748b]">Lessons Done</div>
-          </div>
-          <div className="rounded-3xl bg-[#f8f9fc] p-3 text-center">
-            <div className="text-xl font-semibold text-[#0f172a]">{stats.avg_quiz_score ?? '[88]'}%</div>
+          <div className="rounded-3xl bg-[#f8f9fc] p-4 text-center">
+            <div className="text-xl font-semibold text-[#0f172a]">{stats.avg_quiz_score ?? 0}%</div>
             <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#64748b]">Quiz Avg</div>
+          </div>
+          <div className="rounded-3xl bg-[#f8f9fc] p-4 text-center">
+            <div className="text-xl font-semibold text-[#0f172a]">{stats.completion_rate ?? 0}%</div>
+            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#64748b]">Completion</div>
           </div>
         </div>
       </div>

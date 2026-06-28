@@ -19,11 +19,11 @@ export default function Navbar() {
   
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-[#e9eaf2]">
-      <div className="mx-auto max-w-7xl px-6 py-0">
-        <div style={{ height: '60px' }} className="flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#e9eaf2] shadow-sm">
+      <div className="mx-auto max-w-6xl px-4 py-0">
+        <div className="flex h-14 items-center justify-between gap-4">
           {/* Left side: Logo + Navigation */}
-          <div className="flex items-center gap-7">
+          <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center gap-2.5 no-underline">
               <img
                 src="/eveai_logo.png"
@@ -38,12 +38,12 @@ export default function Navbar() {
             </Link>
 
             {/* Main Navigation */}
-            <nav className="flex items-center gap-0.5">
+            <nav className="flex items-center gap-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`px-3.5 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
                     location.pathname.startsWith(link.to)
                       ? 'bg-[#eef2ff] text-[#607afb]'
                       : 'text-[#475569] hover:bg-[#eef2ff] hover:text-[#607afb]'
@@ -63,15 +63,15 @@ export default function Navbar() {
             {user ? (
               <button
                 onClick={() => navigate('/app/profile')}
-                style={{ height: '40px', width: '40px' }}
-                className="rounded-full bg-[#eef2ff] text-[#0f172a] text-sm font-extrabold flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer border-none"
+                style={{ height: '44px', width: '44px' }}
+                className="rounded-full bg-[#eef2ff] text-[#0f172a] text-base font-extrabold flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer border border-[#dbe4ff] shadow-sm"
               >
                 {getInitials(user.email)}
               </button>
             ) : (
               <Link
                 to="/auth/login"
-                className="text-sm font-medium text-[#607afb] hover:text-[#4f63df]"
+                className="text-sm font-semibold text-[#607afb] hover:text-[#4f63df]"
               >
                 Login
               </Link>
