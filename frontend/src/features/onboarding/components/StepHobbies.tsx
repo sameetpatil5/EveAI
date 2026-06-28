@@ -47,8 +47,19 @@ export default function StepHobbies({ onNext }: StepHobbiesProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-3 rounded-3xl border border-[#e9eaf2] bg-white p-5 shadow-sm">
+    <div className="space-y-6">
+      <div className="rounded-[24px] border border-[#e9eaf2] bg-[#f8fafc] p-5 sm:p-6">
+        <div className="inline-flex rounded-full border border-[#dbe4ff] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#607afb]">
+          Step 3
+        </div>
+        <h2 className="mt-4 text-xl font-semibold text-[#0f172a]">Your interests</h2>
+        <p className="mt-2 text-sm leading-6 text-[#64748b]">
+          Add hobbies and interests to help us personalize your recommendations and pace.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5 rounded-[24px] border border-[#e9eaf2] bg-white p-5 shadow-sm sm:p-6">
+      <div className="space-y-3 rounded-3xl border border-[#e9eaf2] bg-[#f8fafc] p-5 shadow-sm">
         <div className="text-sm font-medium text-[#0f172a]">Add your hobbies</div>
         <p className="text-sm text-[#64748b]">Add hobbies to personalize your learning experience.</p>
 
@@ -83,6 +94,7 @@ export default function StepHobbies({ onNext }: StepHobbiesProps) {
       <Button type="submit" className="w-full" disabled={mutation.status === 'pending'}>
         {mutation.status === 'pending' ? 'Saving hobbies…' : 'Continue'}
       </Button>
-    </form>
+      </form>
+    </div>
   )
 }

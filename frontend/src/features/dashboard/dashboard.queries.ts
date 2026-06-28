@@ -3,6 +3,12 @@ import apiClient from '@/lib/apiClient'
 import { getDashboardState } from './dashboard.api'
 import type { DashboardState } from './dashboard.types'
 
+interface JobStatusResponse {
+  status: string
+  message?: string
+  error?: string | null
+}
+
 export const useDashboardStateQuery = () =>
   useQuery<DashboardState, Error>({
     queryKey: ['dashboard-state'],
@@ -10,11 +16,11 @@ export const useDashboardStateQuery = () =>
   })
 
 export const useJobStatusQuery = (jobId: string | null) =>
-  useQuery<{ status: string; message?: string }, Error>({
+  useQuery<JobStatusResponse, Error>({
     queryKey: ['job', jobId],
     queryFn: async () => {
-      const res = await apiClient.get(`/jobs/${jobId as string}`)
-      return res.data
+      const response = await apiClient.get(`/jobs/${jobId as string}`)
+      return response as unknown as JobStatusResponse
     },
     enabled: !!jobId,
     refetchInterval: (query) => {

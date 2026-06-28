@@ -63,9 +63,20 @@ export default function StepSubjects({ onNext }: StepSubjectsProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="space-y-6">
+      <div className="rounded-[24px] border border-[#e9eaf2] bg-[#f8fafc] p-5 sm:p-6">
+        <div className="inline-flex rounded-full border border-[#dbe4ff] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#607afb]">
+          Step 2
+        </div>
+        <h2 className="mt-4 text-xl font-semibold text-[#0f172a]">Your subjects</h2>
+        <p className="mt-2 text-sm leading-6 text-[#64748b]">
+          Add the subjects you want to study so we can build a structured course plan.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5 rounded-[24px] border border-[#e9eaf2] bg-white p-5 shadow-sm sm:p-6">
       {subjects.map((subject, index) => (
-        <div key={index} className="rounded-3xl border border-[#e9eaf2] bg-white p-5 shadow-sm">
+        <div key={index} className="rounded-3xl border border-[#e9eaf2] bg-[#f8fafc] p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between gap-2">
             <div>
               <p className="text-sm font-medium text-[#0f172a]">Subject {index + 1}</p>
@@ -166,6 +177,7 @@ export default function StepSubjects({ onNext }: StepSubjectsProps) {
           {mutation.status === 'pending' ? 'Saving subjects…' : 'Continue'}
         </Button>
       </div>
-    </form>
+      </form>
+    </div>
   )
 }

@@ -56,8 +56,19 @@ export default function StepAvailability({ onNext }: StepAvailabilityProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="rounded-3xl border border-[#e9eaf2] bg-white p-5 shadow-sm">
+    <div className="space-y-6">
+      <div className="rounded-[24px] border border-[#e9eaf2] bg-[#f8fafc] p-5 sm:p-6">
+        <div className="inline-flex rounded-full border border-[#dbe4ff] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#607afb]">
+          Step 4
+        </div>
+        <h2 className="mt-4 text-xl font-semibold text-[#0f172a]">Availability</h2>
+        <p className="mt-2 text-sm leading-6 text-[#64748b]">
+          Add your preferred study windows so we can build a realistic weekly schedule.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5 rounded-[24px] border border-[#e9eaf2] bg-white p-5 shadow-sm sm:p-6">
+      <div className="rounded-3xl border border-[#e9eaf2] bg-[#f8fafc] p-5 shadow-sm">
         <div className="grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm text-[#475569]">
             <span>Start time</span>
@@ -104,6 +115,7 @@ export default function StepAvailability({ onNext }: StepAvailabilityProps) {
       <Button type="submit" className="w-full" disabled={mutation.status === 'pending'}>
         {mutation.status === 'pending' ? 'Saving availability…' : 'Continue'}
       </Button>
-    </form>
+      </form>
+    </div>
   )
 }
