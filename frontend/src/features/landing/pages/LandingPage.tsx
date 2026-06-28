@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-[calc(100vh-72px)] bg-[#f8fafc] py-24 px-4 text-slate-900">
-      <div className="mx-auto max-w-4xl rounded-[32px] border border-[#e9eaf2] bg-white p-10 shadow-sm sm:p-14">
+    <div className="min-h-[calc(100vh-72px)] bg-[#f8fafc] px-4 py-2 text-slate-900">
+      <div className="mx-auto max-w-4xl rounded-[32px] border border-[#e9eaf2] bg-white p-8 shadow-sm sm:p-10">
         <div className="text-center">
           <h1 className="text-4xl font-semibold tracking-tight text-[#0f172a] sm:text-5xl">
             EveAI — Your Personalized Learning OS

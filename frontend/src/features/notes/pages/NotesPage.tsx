@@ -61,7 +61,7 @@ export default function NotesPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-6 px-4 py-6">
+    <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-4 px-4 py-2">
       <div className="flex flex-col gap-4 rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Notes</p>

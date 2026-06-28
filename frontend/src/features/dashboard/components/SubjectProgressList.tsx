@@ -15,8 +15,8 @@ export function SubjectProgressList({ subjects, className }: SubjectProgressList
   const displaySubjects: SubjectSummary[] = subjects ?? []
 
   return (
-    <Card className={`rounded-3xl p-6 flex flex-col ${className ?? ''}`}>
-      <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Subject Progress</div>
+    <Card className={`rounded-3xl p-5 flex flex-col ${className ?? ''}`}>
+      <div className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Subject Progress</div>
       <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-4">
         {displaySubjects.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#cbd5e1] bg-[#f8fafc] p-4 text-sm text-[#64748b]">
@@ -26,7 +26,7 @@ export function SubjectProgressList({ subjects, className }: SubjectProgressList
           displaySubjects.map((subject, index) => {
             const barColor = progressColors[index % progressColors.length]
             return (
-              <div key={subject.id} className="space-y-3">
+              <div key={subject.id} className="space-y-2.5">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <div className="text-sm font-semibold text-[#0f172a]">{subject.name}</div>

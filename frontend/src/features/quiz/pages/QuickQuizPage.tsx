@@ -31,9 +31,9 @@ export default function QuickQuizPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
-      <div className="space-y-6">
-        <Card className="p-8">
+    <div className="mx-auto w-full max-w-6xl px-4 py-2">
+      <div className="space-y-4">
+        <Card className="p-6">
           <div className="space-y-3">
             <div>
               <h1 className="text-3xl font-semibold text-[#0f172a]">Quick Quiz</h1>
@@ -100,14 +100,14 @@ export default function QuickQuizPage() {
         </Card>
 
         {genMut.isPending && (
-          <Card className="p-8 text-center">
+          <Card className="p-6 text-center">
             <Spinner size="lg" className="mx-auto text-[#607afb]" />
             <p className="mt-4 text-sm text-[#64748b]">Preparing your quiz...</p>
           </Card>
         )}
 
         {generatedQuiz && (
-          <Card className="p-8">
+          <Card className="p-6">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="text-sm font-semibold uppercase tracking-wide text-[#64748b]">Quiz ready</div>

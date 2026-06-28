@@ -87,9 +87,9 @@ export default function SchedulePage() {
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#f8f9fc]">
       <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-1 flex-col overflow-hidden px-4 py-2">
-
-        {/* Header Card */}
-        <div className="mb-6 rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
+        <div className="flex h-full min-h-0 flex-col space-y-4">
+          {/* Header Card */}
+          <div className="rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Schedule</div>
@@ -124,11 +124,11 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        {/* Table Card - fills remaining space */}
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#e6e9f4] bg-white shadow-sm">
-            <div className="flex-1 min-h-0 overflow-y-auto">
-              <table className="w-full table-fixed border-collapse text-left">
+          {/* Table Card - fills remaining space */}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#e6e9f4] bg-white shadow-sm">
+              <div className="flex-1 min-h-0 overflow-y-auto">
+                <table className="w-full table-fixed border-collapse text-left">
                 <thead>
                   <tr className="bg-[#f8f9fc]">
                     <th className="sticky top-0 z-20 w-36 px-6 py-4 text-sm font-semibold uppercase text-[#64748b] bg-[#f8f9fc]">Time</th>
@@ -186,7 +186,8 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        <RegenerateScheduleModal open={open} onClose={() => setOpen(false)} />
+          <RegenerateScheduleModal open={open} onClose={() => setOpen(false)} />
+        </div>
       </div>
     </div>
   )

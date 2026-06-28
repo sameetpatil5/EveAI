@@ -14,9 +14,9 @@ export function UpcomingLessons({ schedule, className }: UpcomingLessonsProps) {
   const displaySchedule = schedule ?? []
 
   return (
-    <Card className={`rounded-3xl p-6 flex flex-col ${className ?? ''}`}>
-      <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Upcoming Lessons</div>
-      <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-2">
+    <Card className={`rounded-3xl p-5 flex flex-col ${className ?? ''}`}>
+      <div className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Upcoming Lessons</div>
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-2.5">
         {displaySchedule.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#cbd5e1] bg-[#f8fafc] p-4 text-sm text-[#64748b]">
             No upcoming lessons scheduled yet.
@@ -31,7 +31,7 @@ export function UpcomingLessons({ schedule, className }: UpcomingLessonsProps) {
             return (
               <div
                 key={item.id}
-                className="flex items-center justify-between gap-2 rounded-2xl border border-[#e9eaf2] bg-[#f8fafc] p-2"
+                className="flex items-center justify-between gap-2 rounded-2xl border border-[#e9eaf2] bg-[#f8fafc] p-3"
               >
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
@@ -44,7 +44,7 @@ export function UpcomingLessons({ schedule, className }: UpcomingLessonsProps) {
                   type="button"
                   onClick={() => item.related_lesson_id && navigate(`/app/lesson/${item.related_lesson_id}`)}
                   disabled={!item.related_lesson_id}
-                  className="rounded-md bg-[#607afb] px-3 py-1 text-[11px] font-semibold text-white transition hover:bg-[#4f63df] disabled:cursor-not-allowed disabled:bg-[#cbd5e1]"
+                  className="rounded-lg bg-[#607afb] px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-[#4f63df] disabled:cursor-not-allowed disabled:bg-[#cbd5e1]"
                 >
                   Start
                 </button>

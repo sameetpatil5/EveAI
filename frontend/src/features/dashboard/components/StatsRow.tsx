@@ -16,11 +16,11 @@ export function StatsRow({ stats }: StatsRowProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((item) => (
-        <Card key={item.label} className="rounded-3xl p-4">
+        <Card key={item.label} className="rounded-3xl p-5">
           <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#64748b]">{item.label}</div>
-          <div className="mt-2">
+          <div className="mt-2 space-y-1">
             <div className="text-2xl font-semibold text-[#0f172a]">{item.value}</div>
-            <div className="mt-1 text-xs text-[#64748b]">{item.detail}</div>
+            <div className="text-xs text-[#64748b]">{item.detail}</div>
           </div>
         </Card>
       ))}

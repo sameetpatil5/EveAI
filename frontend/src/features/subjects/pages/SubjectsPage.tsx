@@ -27,23 +27,24 @@ export default function SubjectsPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6">
-      <div className="mb-8 rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Subjects</div>
-            <div className="mt-2 text-xl font-semibold text-[#0f172a]">My Subjects</div>
-            <p className="mt-2 text-sm text-[#64748b]">Manage your subjects and continue learning where you left off.</p>
+    <div className="mx-auto w-full max-w-6xl px-4 py-2">
+      <div className="space-y-4">
+        <div className="rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Subjects</div>
+              <div className="mt-2 text-xl font-semibold text-[#0f172a]">My Subjects</div>
+              <p className="mt-2 text-sm text-[#64748b]">Manage your subjects and continue learning where you left off.</p>
+            </div>
+            <Button type="button" onClick={() => setIsModalOpen(true)}>
+              <Plus className="mr-2 inline-block" size={16} />
+              Add Subject
+            </Button>
           </div>
-          <Button type="button" onClick={() => setIsModalOpen(true)}>
-            <Plus className="mr-2 inline-block" size={16} />
-            Add Subject
-          </Button>
         </div>
-      </div>
 
-      {subjectsToRender.length ? (
-        <div className="rounded-[28px] border border-[#e9eaf2] bg-[#f8f9fc] p-4 shadow-sm">
+        {subjectsToRender.length ? (
+          <div className="rounded-[28px] border border-[#e9eaf2] bg-[#f8f9fc] p-4 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Your subjects</div>
             <div className="text-xs font-medium uppercase tracking-[0.18em] text-[#64748b]">
@@ -60,14 +61,15 @@ export default function SubjectsPage() {
             </div>
           </div>
         </div>
-      ) : (
-        <EmptyState
-          icon={Plus}
-          heading="No subjects yet"
-          subtext="Add your subjects to build a personalized learning plan."
-          action={{ label: 'Add Subject', onClick: () => setIsModalOpen(true) }}
-        />
-      )}
+        ) : (
+          <EmptyState
+            icon={Plus}
+            heading="No subjects yet"
+            subtext="Add your subjects to build a personalized learning plan."
+            action={{ label: 'Add Subject', onClick: () => setIsModalOpen(true) }}
+          />
+        )}
+      </div>
 
       <AddSubjectModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

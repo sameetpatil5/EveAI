@@ -13,7 +13,7 @@ export function WelcomeSection({ name, stats }: WelcomeSectionProps) {
 
   return (
     <div className="rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
-      <div className="grid gap-6 xl:grid-cols-[1.8fr_1fr]">
+      <div className="grid gap-5 xl:grid-cols-[1.8fr_1fr]">
         <div className="space-y-3">
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">
             {greeting}
@@ -24,7 +24,7 @@ export function WelcomeSection({ name, stats }: WelcomeSectionProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-3 md:gap-4">
           <div className="rounded-2xl bg-[#f8f9fc] p-4 text-center">
             <div className="text-xl font-semibold text-[#0f172a]">{streak}</div>
             <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#64748b]">Day Streak</div>

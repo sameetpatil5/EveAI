@@ -35,8 +35,8 @@ export default function TakeQuizPage() {
 
   if (submitMut.isPending) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-12">
-        <Card className="p-8 text-center">
+      <div className="mx-auto w-full max-w-6xl px-4 py-2">
+        <Card className="p-6 text-center">
           <Spinner size="lg" className="mx-auto text-[#607afb]" />
           <p className="mt-4 text-sm text-[#64748b]">Submitting your answers...</p>
         </Card>
@@ -46,8 +46,8 @@ export default function TakeQuizPage() {
 
   if (result) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-12">
-        <Card className="p-8">
+      <div className="mx-auto w-full max-w-6xl px-4 py-2">
+        <Card className="p-6">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-3xl font-semibold text-[#0f172a]">Quiz Results</h1>
@@ -65,8 +65,8 @@ export default function TakeQuizPage() {
 
   if (!questions.length) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-12">
-        <Card className="p-8">
+      <div className="mx-auto w-full max-w-6xl px-4 py-2">
+        <Card className="p-6">
           <div className="space-y-4 text-center">
             <h1 className="text-3xl font-semibold text-[#0f172a]">No active quiz</h1>
             <p className="text-sm text-[#64748b]">
@@ -85,9 +85,9 @@ export default function TakeQuizPage() {
   }
 
   return (
-    <div className="mx-auto flex h-full max-w-4xl flex-1 flex-col px-4 py-12">
-      <div className="flex-1 min-h-0 space-y-6 overflow-y-auto">
-        <Card className="p-8">
+    <div className="mx-auto flex h-full w-full max-w-6xl flex-1 flex-col px-4 py-2">
+      <div className="flex-1 min-h-0 space-y-4 overflow-y-auto">
+        <Card className="p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-3xl font-semibold text-[#0f172a]">Take Quiz</h1>

@@ -2,7 +2,7 @@ import { RegisterForm } from '../components/RegisterForm'
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-[#f8f9fc] px-4 py-16">
+    <div className="flex h-full items-center justify-center bg-[#f8f9fc] px-4 py-0">
       <RegisterForm />
     </div>
   )

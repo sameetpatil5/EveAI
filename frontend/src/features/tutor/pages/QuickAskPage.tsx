@@ -65,16 +65,16 @@ export default function QuickAskPage() {
   }
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-[900px] flex-col">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-col px-4 py-2">
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[32px] border border-[#e8edf8] bg-white shadow-sm">
         {isEmptyChat && (
-          <div className="border-b border-[#e8edf8] bg-[#f8fafc] px-6 py-5 text-sm text-[#475569]">
+          <div className="border-b border-[#e8edf8] bg-[#f8fafc] px-5 py-4 text-sm text-[#475569]">
             Chat with Eve and get personalized study help any time.
           </div>
         )}
 
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div className="flex-1 min-h-0 overflow-y-auto px-6 py-5">
+          <div className="flex-1 min-h-0 overflow-y-auto px-5 py-4">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
                 <div
@@ -96,9 +96,9 @@ export default function QuickAskPage() {
             <div ref={scrollRef} />
           </div>
 
-          {error && <div className="border-t border-[#e8edf8] bg-red-50 px-6 py-4 text-sm text-red-700">{error}</div>}
+          {error && <div className="border-t border-[#e8edf8] bg-red-50 px-5 py-3 text-sm text-red-700">{error}</div>}
 
-          <div className="border-t border-[#e8edf8] bg-white px-6 py-4">
+          <div className="border-t border-[#e8edf8] bg-white px-5 py-3">
             <div className="flex flex-col gap-3 sm:flex-row">
               <input
                 type="text"
