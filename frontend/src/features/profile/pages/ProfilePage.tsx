@@ -21,8 +21,8 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-[#f8f9fc] p-6">
         <div className="rounded-[10px] border border-[#e9eaf2] bg-white p-6">
-          <div className="text-[#991b1b] font-semibold">Error loading profile</div>
-          <div className="mt-2 text-sm text-[#475569]">{String(profileQuery.error?.message || profileQuery.error || 'Unknown error')}</div>
+          <div className="text-[#991b1b] font-semibold">[Error loading profile]</div>
+          <div className="mt-2 text-sm text-[#475569]">{String(profileQuery.error?.message || profileQuery.error || '[Unknown error]')}</div>
           <pre className="mt-4 overflow-auto bg-gray-100 p-2 text-xs">{JSON.stringify(profileQuery.error, null, 2)}</pre>
         </div>
       </div>
@@ -34,7 +34,7 @@ export default function ProfilePage() {
   if (!data) {
     return (
       <div className="min-h-screen bg-[#f8f9fc] p-6">
-        <div className="rounded-[10px] border border-[#e9eaf2] bg-white p-6 text-[#475569]">No profile data returned from server.</div>
+        <div className="rounded-[10px] border border-[#e9eaf2] bg-white p-6 text-[#475569]">[No profile data returned from server.]</div>
       </div>
     )
   }
@@ -42,7 +42,7 @@ export default function ProfilePage() {
   if (!data.profile) {
     return (
       <div className="min-h-screen bg-[#f8f9fc] p-6">
-        <div className="rounded-[10px] border border-[#e9eaf2] bg-white p-6 text-[#475569]">Profile data structure incomplete (missing profile object).</div>
+        <div className="rounded-[10px] border border-[#e9eaf2] bg-white p-6 text-[#475569]">[Profile data structure incomplete (missing profile object).]</div>
       </div>
     )
   }
@@ -60,18 +60,8 @@ export default function ProfilePage() {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join('') || 'JD'
-
-  // Page-only demo subjects (temporary). Set to `true` to force demo data on this page only.
-  const USE_DEMO_SUBJECTS = true
-
-  const demoSubjects = [
-    { id: 'demo-1', name: '[Database Management Systems]', priority: 3, weekly_hours: 6, goal: '[Brush up core concepts]' },
-    { id: 'demo-2', name: '[Object-Oriented Programming]', priority: 7, weekly_hours: 8, goal: '[Learn advanced topics]' },
-    { id: 'demo-3', name: '[Data Structures and Algorithms]', priority: 9, weekly_hours: 10, goal: '[Understand and solve DSA problems]' },
-    { id: 'demo-4', name: '[Operating Systems]', priority: 5, weekly_hours: 5, goal: '[Understand processes and threads]' },
-  ]
-
-  const displaySubjects = USE_DEMO_SUBJECTS ? demoSubjects : subjects
+  const streakLabel = '[12-day streak]'
+  const lessonsLabel = '[47 lessons completed]'
 
   return (
     <div className="h-full min-h-0 overflow-hidden bg-[#f8f9fc] px-3 py-3 md:px-5 lg:px-6">
@@ -89,10 +79,10 @@ export default function ProfilePage() {
                   {academicLevel}
                 </span>
                 <span className="rounded-full border border-[#e9eaf2] bg-[#f8f9fc] px-2.5 py-1 font-medium text-[#475569]">
-                  12-day streak
+                  {streakLabel}
                 </span>
                 <span className="rounded-full border border-[#e9eaf2] bg-[#f8f9fc] px-2.5 py-1 font-medium text-[#475569]">
-                  47 lessons completed
+                  {lessonsLabel}
                 </span>
               </div>
             </div>
@@ -116,7 +106,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex h-full min-h-0 flex-1 flex-col">
-            <SubjectsSection subjects={displaySubjects} />
+            <SubjectsSection subjects={subjects} />
           </div>
         </div>
       </main>

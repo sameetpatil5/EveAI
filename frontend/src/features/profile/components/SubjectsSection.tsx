@@ -37,14 +37,6 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
     setEditing(false)
   }
 
-  const displaySubjects = localSubjects.length
-    ? localSubjects
-    : [
-        { id: 'placeholder-1', name: '[Subject Name]', priority: 3, weekly_hours: 6, goal: '[Goal]' },
-        { id: 'placeholder-2', name: '[Subject Name]', priority: 7, weekly_hours: 8, goal: '[Goal]' },
-        { id: 'placeholder-3', name: '[Subject Name]', priority: 9, weekly_hours: 10, goal: '[Goal]' },
-      ]
-
   const getBadgeClass = (priority: number) => {
     if (priority >= 8) return 'bg-[#fee2e2] text-[#ef4444]'
     if (priority >= 5) return 'bg-[#fef3c7] text-[#f59e0b]'
@@ -88,7 +80,7 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
         <div className="min-h-0 flex-1 overflow-y-auto overflow-x-auto pr-1 pb-5">
           <table className="w-full border-collapse text-[13px]">
             <tbody>
-              {displaySubjects.map((subject) => (
+              {localSubjects.map((subject) => (
                 <tr key={subject.id} className="border-b border-[#e9eaf2] last:border-b-0">
                   <td className="py-3 pr-3 font-semibold text-[#0f172a]">{subject.name}</td>
                   <td className="py-3 pr-3">
@@ -136,7 +128,7 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
                         className="w-full rounded-lg border border-[#e9eaf2] px-3 py-2"
                       />
                     ) : (
-                      <div className="max-w-[200px] text-[12px] text-[#64748b]">{subject.goal ?? '[Goal]'}</div>
+                      <div className="max-w-[200px] text-[12px] text-[#64748b]">{subject.goal ?? ''}</div>
                     )}
                   </td>
                 </tr>

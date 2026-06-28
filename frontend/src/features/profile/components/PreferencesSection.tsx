@@ -17,12 +17,12 @@ export default function PreferencesSection({
 
   const addSlot = () => {
     if (!start || !end) {
-      setErrorMessage('Both start and end are required.')
+      setErrorMessage('[Both start and end are required.]')
       return
     }
 
     if (start >= end) {
-      setErrorMessage('End time must be after start time.')
+      setErrorMessage('[End time must be after start time.]')
       return
     }
 
@@ -65,7 +65,7 @@ export default function PreferencesSection({
 
   const handleSave = async () => {
     if (slots.length === 0) {
-      setErrorMessage('Please add at least one availability slot.')
+      setErrorMessage('[Please add at least one availability slot.]')
       return
     }
 
@@ -89,7 +89,7 @@ export default function PreferencesSection({
         <div className="space-y-3">
           {slots.length === 0 ? (
             <div className="flex flex-wrap items-center gap-3 rounded-[8px] border border-[#e9eaf2] bg-[#f8fafc] px-2 py-2">
-              <p className="text-sm text-[#475569]">No availability slots configured.</p>
+              <p className="text-sm text-[#475569]">[No availability slots configured.]</p>
             </div>
           ) : (
             slots.map((slot, index) => (
