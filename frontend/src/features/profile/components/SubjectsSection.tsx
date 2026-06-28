@@ -55,35 +55,41 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
     <div className="h-full flex min-h-0 flex-1 flex-col rounded-[10px] border border-[#e9eaf2] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
       <div className="flex items-center justify-between border-b border-[#e9eaf2] px-5 py-4">
         <div>
-          <div className="text-[14px] font-semibold uppercase tracking-[0.04em] text-[#0f172a]">Subjects</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Subjects</div>
         </div>
-        <Button variant="secondary" onClick={() => setEditing((current) => !current)}>
+        <Button
+          variant="secondary"
+          onClick={() => setEditing((current) => !current)}
+          className="rounded-lg border border-[#e9eaf2] bg-[#f8f9fc] px-3 py-2 text-sm font-semibold text-[#0f172a] hover:bg-[#eef2ff]"
+        >
           {editing ? 'Cancel' : 'Edit'}
         </Button>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-5 pb-5 pt-4">
-        <div className="overflow-x-auto pb-1">
-          <table className="w-full border-collapse text-[13px]">
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-fixed border-collapse text-[13px]">
+            <colgroup>
+              <col className="w-[28%]" />
+              <col className="w-[14%]" />
+              <col className="w-[18%]" />
+              <col className="w-[20%]" />
+              <col className="w-[20%]" />
+            </colgroup>
             <thead>
               <tr className="border-b border-[#e9eaf2] text-left text-[11px] font-bold uppercase tracking-[0.04em] text-[#94a3b8]">
-                <th className="pb-3 pr-3">Subject</th>
-                <th className="pb-3 pr-3">Priority</th>
-                <th className="pb-3 pr-3">Weekly Hours</th>
-                <th className="pb-3 pr-3">Progress</th>
-                <th className="pb-3">Goal</th>
+                <th className="h-12 px-3">Subject</th>
+                <th className="h-12 px-3">Priority</th>
+                <th className="h-12 px-3">Weekly Hours</th>
+                <th className="h-12 px-3">Progress</th>
+                <th className="h-12 px-3">Goal</th>
               </tr>
             </thead>
-          </table>
-        </div>
-
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-auto pr-1 pb-5">
-          <table className="w-full border-collapse text-[13px]">
-            <tbody>
+            <tbody className="max-h-[360px] overflow-y-auto text-[13px]">
               {localSubjects.map((subject) => (
                 <tr key={subject.id} className="border-b border-[#e9eaf2] last:border-b-0">
-                  <td className="py-3 pr-3 font-semibold text-[#0f172a]">{subject.name}</td>
-                  <td className="py-3 pr-3">
+                  <td className="h-14 px-3 py-3 font-semibold text-[#0f172a]">{subject.name}</td>
+                  <td className="h-14 px-3 py-3">
                     {editing ? (
                       <input
                         type="number"
@@ -94,12 +100,12 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
                         className="w-20 rounded-lg border border-[#e9eaf2] px-3 py-2"
                       />
                     ) : (
-                      <span className={`inline-flex h-[26px] w-[26px] items-center justify-center rounded-[6px] text-[12px] font-bold ${getBadgeClass(subject.priority)}`}>
+                      <span className={`inline-flex h-[28px] w-[28px] items-center justify-center rounded-[6px] text-[12px] font-bold ${getBadgeClass(subject.priority)}`}>
                         {subject.priority}
                       </span>
                     )}
                   </td>
-                  <td className="py-3 pr-3 text-[#475569]">
+                  <td className="h-14 px-3 py-3 text-[#475569]">
                     {editing ? (
                       <input
                         type="number"
@@ -112,15 +118,15 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
                       `${subject.weekly_hours}h / week`
                     )}
                   </td>
-                  <td className="py-3 pr-3">
+                  <td className="h-14 px-3 py-3">
                     <div className="flex items-center gap-2">
-                      <div className="h-[5px] w-[80px] overflow-hidden rounded-[3px] bg-[#e9eaf2]">
+                      <div className="h-[6px] w-full max-w-[110px] overflow-hidden rounded-[3px] bg-[#e9eaf2]">
                         <div className="h-full rounded-[3px]" style={{ width: getProgressWidth(subject.priority), backgroundColor: getProgressColor(subject.priority) }} />
                       </div>
                       <span className="text-[12px] text-[#94a3b8]">{Math.max(10, Math.min(99, 20 + subject.priority * 4))}%</span>
                     </div>
                   </td>
-                  <td className="py-3 text-[#475569]">
+                  <td className="h-14 px-3 py-3 text-[#475569]">
                     {editing ? (
                       <input
                         value={subject.goal ?? ''}
@@ -128,7 +134,7 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
                         className="w-full rounded-lg border border-[#e9eaf2] px-3 py-2"
                       />
                     ) : (
-                      <div className="max-w-[200px] text-[12px] text-[#64748b]">{subject.goal ?? ''}</div>
+                      <div className="max-w-full text-[12px] text-[#64748b]">{subject.goal ?? ''}</div>
                     )}
                   </td>
                 </tr>

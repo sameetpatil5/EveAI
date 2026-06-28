@@ -18,7 +18,7 @@ export default function InsightsPage() {
     <div className="flex h-full min-h-0 flex-col overflow-hidden px-0">
       <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-1 flex-col overflow-hidden px-4 py-2">
         {/* Stats Row - No scroll */}
-        <div className="space-y-4 py-2">
+        <div className="space-y-6 py-0">
           <InsightsStatsRow data={data} />
         </div>
 

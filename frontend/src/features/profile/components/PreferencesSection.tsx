@@ -78,9 +78,13 @@ export default function PreferencesSection({
     <div className="flex flex-1 flex-col rounded-[10px] border border-[#e9eaf2] bg-white px-3 py-2 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
       <div className="flex items-center justify-between px-2 py-2">
         <div>
-          <div className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#0f172a]">Preferred Study Time</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Preferred Study Time</div>
         </div>
-        <Button variant="secondary" onClick={() => setEditing((current) => !current)}>
+        <Button
+          variant="secondary"
+          onClick={() => setEditing((current) => !current)}
+          className="rounded-lg border border-[#e9eaf2] bg-[#f8f9fc] px-3 py-2 text-sm font-semibold text-[#0f172a] hover:bg-[#eef2ff]"
+        >
           {editing ? 'Cancel' : 'Edit'}
         </Button>
       </div>

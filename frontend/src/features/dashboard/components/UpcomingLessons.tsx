@@ -14,8 +14,8 @@ export function UpcomingLessons({ schedule, className }: UpcomingLessonsProps) {
   const displaySchedule = schedule ?? []
 
   return (
-    <Card className={`rounded-3xl p-3 flex flex-col ${className ?? ''}`}>
-      <div className="mb-6 text-sm font-medium text-[#475569]">Upcoming Lessons</div>
+    <Card className={`rounded-3xl p-6 flex flex-col ${className ?? ''}`}>
+      <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Upcoming Lessons</div>
       <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-2">
         {displaySchedule.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#cbd5e1] bg-[#f8fafc] p-4 text-sm text-[#64748b]">

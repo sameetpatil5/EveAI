@@ -34,9 +34,13 @@ export default function HobbiesSection({ hobbies }: { hobbies: Profile['hobbies'
     <div className="rounded-[10px] border border-[#e9eaf2] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <div className="text-[13px] font-bold uppercase tracking-[0.02em] text-[#0f172a]">Hobbies</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Hobbies</div>
         </div>
-        <Button variant="secondary" onClick={() => setEditing((current) => !current)}>
+        <Button
+          variant="secondary"
+          onClick={() => setEditing((current) => !current)}
+          className="rounded-lg border border-[#e9eaf2] bg-[#f8f9fc] px-3 py-2 text-sm font-semibold text-[#0f172a] hover:bg-[#eef2ff]"
+        >
           {editing ? 'Cancel' : 'Edit'}
         </Button>
       </div>

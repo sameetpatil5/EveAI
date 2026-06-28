@@ -16,7 +16,7 @@ export function SubjectProgressList({ subjects, className }: SubjectProgressList
 
   return (
     <Card className={`rounded-3xl p-6 flex flex-col ${className ?? ''}`}>
-      <div className="mb-6 text-sm font-medium text-[#475569]">Subject Progress</div>
+      <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Subject Progress</div>
       <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-4">
         {displaySubjects.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#cbd5e1] bg-[#f8fafc] p-4 text-sm text-[#64748b]">

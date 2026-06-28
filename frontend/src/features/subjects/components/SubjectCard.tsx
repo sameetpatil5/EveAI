@@ -13,13 +13,15 @@ export function SubjectCard({ subject }: SubjectCardProps) {
   const hasCourse = Boolean(subject.course_id)
 
   return (
-    <Card className="p-5">
+    <Card className="flex h-full min-h-[340px] w-full max-w-[320px] flex-col p-7 shadow-sm">
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
           <div className="text-sm font-medium uppercase tracking-[0.2em] text-[#475569]">
             {subject.level}
           </div>
-          <h3 className="mt-3 text-xl font-semibold text-[#0f172a]">{subject.name}</h3>
+          <h3 className="mt-3 truncate text-xl font-semibold text-[#0f172a]" title={subject.name}>
+            {subject.name}
+          </h3>
         </div>
         <div className="rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold uppercase text-[#2563eb]">
           priority {subject.priority}
@@ -56,7 +58,7 @@ export function SubjectCard({ subject }: SubjectCardProps) {
       </div>
 
       <Button
-        className="w-full"
+        className="mt-auto w-full"
         variant={hasCourse ? 'default' : 'secondary'}
         disabled={!hasCourse}
         onClick={() => {

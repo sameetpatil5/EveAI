@@ -61,11 +61,14 @@ export default function NotesPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl flex-col gap-6 px-4 py-6">
       <div className="flex flex-col gap-4 rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-[#64748b]">Notes</p>
-          <h1 className="mt-2 text-3xl font-semibold text-[#0f172a]">Your notes</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Notes</p>
+          <div className="mt-2 text-xl font-semibold text-[#0f172a]">My Notes</div>
+          <p className="mt-2 max-w-2xl text-sm text-[#64748b]">
+            Keep your ideas, reminders, and study notes organized in one place.
+          </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="rounded-3xl bg-[#f8fafc] px-4 py-3 text-sm text-[#475569] shadow-sm">
@@ -77,11 +80,12 @@ export default function NotesPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
+      <div className="flex min-h-0 flex-1 flex-col gap-4 rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-[#0f172a]">Notes collection</h2>
-            <p className="text-sm text-[#64748b]">Browse notes by subject and click any card to edit it.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Notes collection</p>
+            <div className="mt-2 text-xl font-semibold text-[#0f172a]">Browse and manage your notes</div>
+            <p className="mt-2 text-sm text-[#64748b]">Filter by subject and open any card to review or edit it.</p>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -105,7 +109,9 @@ export default function NotesPage() {
         </div>
 
         {notes.length > 0 ? (
-          <NoteList notes={notes} selectedId={activeNoteId} onSelect={openEditModal} />
+          <div className="min-h-0 flex-1">
+            <NoteList notes={notes} selectedId={activeNoteId} onSelect={openEditModal} />
+          </div>
         ) : (
           <div className="rounded-3xl border border-dashed border-[#dbeafe] bg-[#f8fafc] p-10 text-center text-sm text-[#475569]">
             {subjectFilter === '__general__'

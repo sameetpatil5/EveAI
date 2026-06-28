@@ -64,16 +64,17 @@ export default function ProfilePage() {
   const lessonsLabel = '[47 lessons completed]'
 
   return (
-    <div className="h-full min-h-0 overflow-hidden bg-[#f8f9fc] px-3 py-3 md:px-5 lg:px-6">
-      <main className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-1 flex-col gap-4 overflow-hidden">
-        <section className="mb-0 flex flex-col gap-4 rounded-[10px] border border-[#e9eaf2] bg-white px-5 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full border-2 border-[#c7d0fe] bg-[#eef2ff] text-[22px] font-bold text-[#607afb]">
+    <div className="h-full min-h-0 overflow-hidden bg-[#f8f9fc] px-0">
+      <main className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-1 flex-col gap-4 overflow-hidden px-4 py-2">
+        <section className="mb-0 flex flex-col gap-4 rounded-3xl border border-[#e9eaf2] bg-white p-6 shadow-sm md:flex-row md:items-center md:justify-between">
+          <div className="grid w-full items-center gap-4 md:grid-cols-[minmax(0,auto)_1fr] md:gap-6">
+            <div className="flex h-28 w-28 items-center justify-center rounded-[28px] border border-[#c7d0fe] bg-[#eef2ff] text-4xl font-bold text-[#607afb] shadow-sm">
               {initials}
             </div>
-            <div>
-              <h2 className="text-[18px] font-semibold text-[#0f172a]">{fullName}</h2>
-              <div className="mt-1 text-sm text-[#94a3b8]">{email}</div>
+            <div className="space-y-2">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b]">Profile</div>
+              <h2 className="text-2xl font-semibold text-[#0f172a]">{fullName}</h2>
+              <div className="text-sm text-[#94a3b8]">{email}</div>
               <div className="mt-2 flex flex-wrap gap-2 text-sm">
                 <span className="rounded-full border border-[#c7d0fe] bg-[#eef2ff] px-2.5 py-1 font-medium text-[#607afb]">
                   {academicLevel}
@@ -87,7 +88,11 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
-          <Button variant="secondary" type="button" className="shrink-0">
+          <Button
+            variant="secondary"
+            type="button"
+            className="shrink-0 rounded-lg border border-[#e9eaf2] bg-[#f8f9fc] px-4 py-2 text-sm font-semibold text-[#0f172a] hover:bg-[#eef2ff]"
+          >
             Edit
           </Button>
         </section>

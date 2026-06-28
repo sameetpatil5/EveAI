@@ -21,7 +21,7 @@ export default function QuizScoreChart({ subjectProgress }: QuizScoreChartProps)
 
   return (
     <Card className="rounded-3xl p-6 flex flex-col h-full">
-      <div className="mb-6 text-sm font-medium text-[#475569]">Subject Progress</div>
+      <div className="mb-6 text-[12px] font-semibold uppercase tracking-[0.2em] text-[#64748b]">Subject Progress</div>
       <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-4">
         {displaySubjects.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#cbd5e1] bg-[#f8fafc] p-4 text-sm text-[#64748b]">
