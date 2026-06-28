@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.quiz_repository import QuizRepository
+from app.repositories.subject_repository import SubjectRepository
 from app.core.exceptions import NotFoundError
 from app.schemas.quiz import QuizResponse, QuizResultResponse
 from app.utils.helpers import generate_uuid
@@ -15,12 +16,16 @@ class QuizService:
         difficulty: str,
         question_count: int,
         db: AsyncSession,
+        prompt: str | None = None,
     ) -> QuizResponse:
         from app.ai.agents import get_quiz_agent
 
         quiz_agent = get_quiz_agent()
         quiz_data = await quiz_agent.generate(
-            content=module_id, difficulty=difficulty, question_count=question_count
+            content=module_id,
+            difficulty=difficulty,
+            question_count=question_count,
+            prompt=prompt,
         )
         repo = QuizRepository(db)
         quiz = await repo.create_quiz(
@@ -35,7 +40,7 @@ class QuizService:
             if not q_data.get("id"):
                 q_data["id"] = generate_uuid()
             questions_data.append(q_data)
-        await repo.create_questions(quiz.id, questions_data)
+        questions_data = await repo.create_questions(quiz.id, questions_data)
         return QuizResponse.model_validate(
             {
                 "id": quiz.id,
@@ -51,12 +56,21 @@ class QuizService:
         difficulty: str,
         question_count: int,
         db: AsyncSession,
+        prompt: str | None = None,
     ) -> QuizResponse:
         from app.ai.agents import get_quiz_agent
 
         quiz_agent = get_quiz_agent()
+        subject_repo = SubjectRepository(db)
+        subject = await subject_repo.get_by_id(subject_id) if subject_id else None
+        topic = (
+            subject.name if subject and getattr(subject, "name", None) else subject_id
+        )
         quiz_data = await quiz_agent.generate(
-            content=subject_id, difficulty=difficulty, question_count=question_count
+            content=topic,
+            difficulty=difficulty,
+            question_count=question_count,
+            prompt=prompt,
         )
         repo = QuizRepository(db)
         quiz = await repo.create_quiz(
@@ -68,7 +82,7 @@ class QuizService:
             if not q_data.get("id"):
                 q_data["id"] = generate_uuid()
             questions_data.append(q_data)
-        await repo.create_questions(quiz.id, questions_data)
+        questions_data = await repo.create_questions(quiz.id, questions_data)
         return QuizResponse.model_validate(
             {
                 "id": quiz.id,

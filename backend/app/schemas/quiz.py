@@ -6,12 +6,14 @@ class QuizGenerateModuleRequest(BaseModel):
     module_id: str
     difficulty: str = "medium"
     question_count: int = 10
+    prompt: Optional[str] = None
 
 
 class QuizGenerateQuickRequest(BaseModel):
     subject_id: str
     difficulty: str = "medium"
     question_count: int = 10
+    prompt: Optional[str] = None
 
 
 class QuestionResponse(BaseModel):

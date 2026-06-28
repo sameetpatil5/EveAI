@@ -17,11 +17,24 @@ class QuizRepository:
         await self.db.refresh(quiz)
         return quiz
 
-    async def create_questions(self, quiz_id: str, questions: list[dict]) -> None:
+    async def create_questions(self, quiz_id: str, questions: list[dict]) -> list[dict]:
+        normalized_questions: list[dict] = []
+        seen_ids: set[str] = set()
+
         for q_data in questions:
-            question = QuizQuestion(quiz_id=quiz_id, **q_data)
+            normalized = dict(q_data)
+            candidate_id = str(normalized.get("id") or "").strip()
+            if not candidate_id or candidate_id in seen_ids:
+                candidate_id = generate_uuid()
+            normalized["id"] = candidate_id
+            seen_ids.add(candidate_id)
+            normalized_questions.append(normalized)
+
+            question = QuizQuestion(quiz_id=quiz_id, **normalized)
             self.db.add(question)
+
         await self.db.commit()
+        return normalized_questions
 
     async def get_quiz_with_questions(self, quiz_id: str) -> Quiz:
         result = await self.db.execute(

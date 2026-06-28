@@ -16,8 +16,8 @@ export default function QuizQuestion({
   result?: { correct: boolean; feedback?: string }
 }) {
   return (
-    <div className="mb-6">
-      <div className="mb-3 text-sm font-medium text-[#0f172a]">{question.question_text}</div>
+    <div className="rounded-2xl border border-[#e9eaf2] bg-[#f8fafc] p-4 sm:p-5">
+      <div className="mb-3 text-sm font-medium text-slate-800">{question.question_text}</div>
       <div className="space-y-3">
         {question.question_type === 'mcq' && (
           <div className="grid grid-cols-1 gap-3">

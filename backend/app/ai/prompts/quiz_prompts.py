@@ -8,6 +8,10 @@ QUIZ PARAMETERS:
 - Difficulty Level: {difficulty}
 - Number of Questions: {question_count}
 - Question Types: Multiple choice, True/False, Short answer (mix based on difficulty)
+- Additional Instructions: {prompt}
+
+Goal:
+Create a quiz that matches the requested topic, difficulty, and instructional focus. If the additional instructions mention a specific style, concept, or learning goal, follow them closely.
 
 Provide a structured quiz representation with the following fields:
 
@@ -26,6 +30,7 @@ RULES:
 4. All explanations must be 2-3 sentences and educational.
 5. Questions should test understanding, not just memorization.
 6. Difficulty should scale: easy recall, medium application, hard analysis.
+7. If the prompt asks for a specific emphasis, make sure that emphasis is visible across the questions.
 """
 
 QUIZ_GENERATION_PROMPT = ChatPromptTemplate.from_template(template)

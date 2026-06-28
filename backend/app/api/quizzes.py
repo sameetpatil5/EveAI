@@ -22,7 +22,12 @@ async def generate_module_quiz(
 ):
     service = QuizService()
     result = await service.generate_module_quiz(
-        data.module_id, user.id, data.difficulty, data.question_count, db
+        data.module_id,
+        user.id,
+        data.difficulty,
+        data.question_count,
+        db,
+        prompt=data.prompt,
     )
     return success_response(result.model_dump())
 
@@ -35,7 +40,12 @@ async def generate_quick_quiz(
 ):
     service = QuizService()
     result = await service.generate_quick_quiz(
-        data.subject_id, user.id, data.difficulty, data.question_count, db
+        data.subject_id,
+        user.id,
+        data.difficulty,
+        data.question_count,
+        db,
+        prompt=data.prompt,
     )
     return success_response(result.model_dump())
 

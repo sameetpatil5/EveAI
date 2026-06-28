@@ -3,6 +3,8 @@ export interface QuizQuestion {
   question_text: string
   question_type: 'mcq' | 'true_false' | 'subjective'
   options?: string[]
+  correct_answer?: string
+  explanation?: string
 }
 
 export interface Quiz {

@@ -11,13 +11,21 @@ class QuizAgent:
         self.prompt = QUIZ_GENERATION_PROMPT
         self.chain = self.prompt | self.llm
 
-    async def generate(self, content: str, difficulty: str, question_count: int):
+    async def generate(
+        self,
+        content: str,
+        difficulty: str,
+        question_count: int,
+        prompt: str | None = None,
+    ):
         try:
             return await self.chain.ainvoke(
                 {
                     "content": content,
                     "difficulty": difficulty,
                     "question_count": question_count,
+                    "prompt": prompt
+                    or "Create a balanced quiz that covers the core ideas clearly and fairly.",
                 }
             )
         except Exception as e:

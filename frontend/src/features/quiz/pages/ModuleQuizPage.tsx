@@ -28,7 +28,7 @@ export default function ModuleQuizPage() {
     if (!quizId || questions.length > 0) return
 
     genMut.mutate(
-      { moduleId: quizId, difficulty: 'medium', count: 5 },
+      { moduleId: quizId, difficulty: 'medium', count: 5, prompt: 'Focus on the core concepts from this module and include a mix of conceptual and application-based questions.' },
       {
         onSuccess: (data) => {
           setQuestions(data.questions)
@@ -108,21 +108,23 @@ export default function ModuleQuizPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
-      <div className="space-y-6">
-        <Card className="p-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-semibold text-[#0f172a]">Take Quiz</h1>
-              <p className="mt-2 text-sm text-[#64748b]">Answer all questions below, then submit to see your score.</p>
-            </div>
-            <div className="rounded-3xl bg-[#f8fafc] px-4 py-3 text-sm text-[#475569]">
-              {answeredCount}/{questions.length} answered
+    <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 lg:px-8">
+      <div className="space-y-4">
+        <Card className="overflow-hidden border-[#e9eaf2] bg-white shadow-[0_18px_45px_-24px_rgba(15,23,42,0.35)]">
+          <div className="border-b border-[#e9eaf2] bg-[#f8fafc] px-5 py-4 sm:px-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h1 className="text-xl font-semibold text-slate-900">Take Quiz</h1>
+                <p className="mt-1 text-sm text-slate-500">Answer each question and submit to review your score.</p>
+              </div>
+              <div className="rounded-full bg-[#607afb]/10 px-3 py-1 text-sm font-medium text-[#607afb]">
+                {answeredCount}/{questions.length} answered
+              </div>
             </div>
           </div>
         </Card>
 
-        <Card className="p-8">
+        <Card className="p-6 sm:p-8">
           <div className="space-y-6">
             {questions.map((q) => {
               const questionResult = (result as QuizResult | null)?.question_results.find(
