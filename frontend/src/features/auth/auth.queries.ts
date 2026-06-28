@@ -12,7 +12,7 @@ export function useLoginMutation() {
     mutationFn: login,
     onSuccess: (data) => {
       setAuth(data.token, data.user)
-      navigate('/app/dashboard')
+      navigate(data.user.onboarding_complete ? '/app/dashboard' : '/onboarding')
     },
   })
 }
@@ -25,7 +25,7 @@ export function useRegisterMutation() {
     mutationFn: register,
     onSuccess: (data) => {
       setAuth(data.token, data.user)
-      navigate('/onboarding')
+      navigate(data.user.onboarding_complete ? '/app/dashboard' : '/onboarding')
     },
   })
 }

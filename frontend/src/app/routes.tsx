@@ -4,6 +4,8 @@ import { PageLoader } from '@/components/shared/PageLoader'
 import { ProtectedRoute } from '@/components/shared/ProtectedRoute'
 
 const LandingPage = lazy(() => import('@/features/landing/pages/LandingPage'))
+const AboutPage = lazy(() => import('@/features/landing/pages/AboutPage'))
+const ContactPage = lazy(() => import('@/features/landing/pages/ContactPage'))
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const OnboardingPage = lazy(() => import('@/features/onboarding/pages/OnboardingPage'))
@@ -30,6 +32,8 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="/auth/register" element={<RegisterPage />} />
         </Route>
