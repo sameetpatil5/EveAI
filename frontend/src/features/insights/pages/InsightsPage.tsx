@@ -32,7 +32,7 @@ export default function InsightsPage() {
 
                 {/* Weekly Study Hours */}
                 <div className="min-h-0">
-                  <ProgressChart />
+                  <ProgressChart data={data} />
                 </div>
               </div>
 

@@ -9,28 +9,28 @@ export function InsightsStatsRow({ data }: InsightsStatsRowProps) {
   const items = [
     {
       label: 'Total Study Hours',
-      value: data?.total_study_hours ? `${data.total_study_hours}h` : '[84h]',
-      detail: '[+6h this week]',
+      value: `${data?.total_study_hours ?? 0}h`,
+      detail: `of ${data?.total_estimated_study_hours ?? 0}h planned`,
     },
     {
       label: 'Lessons Completed',
-      value: data?.today_lessons_completed ?? '[47]',
-      detail: `[of ${data?.today_lessons_total ?? 96} total]`,
+      value: `${data?.total_lessons_completed ?? 0}`,
+      detail: `of ${data?.total_lessons_available ?? 0} total`,
+    },
+    {
+      label: 'Course Completion',
+      value: `${data?.total_course_completion ?? 0}%`,
+      detail: `Study target: ${data?.total_study_hours_available_this_week ?? 0}h/week`,
     },
     {
       label: 'Current Streak',
       value: `${data?.current_streak ?? 0}d`,
-      detail: `[Best: ${data?.longest_streak ?? 0} days]`,
-    },
-    {
-      label: 'This Week',
-      value: '[6h]',
-      detail: '[Goal: 10h]',
+      detail: `Best: ${data?.longest_streak ?? 0} days`,
     },
     {
       label: 'Quiz Avg',
-      value: `${data?.avg_quiz_score ?? '[100]'}%`,
-      detail: `[${data?.quiz_completion_rate ?? 100}% complete]`,
+      value: `${data?.avg_quiz_score ?? 0}%`,
+      detail: `${data?.quiz_completion_rate ?? 0}% attempted`,
     },
   ]
 

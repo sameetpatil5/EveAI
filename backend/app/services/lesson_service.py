@@ -3,6 +3,9 @@ from typing import Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.course_repository import CourseRepository
 from app.repositories.lesson_repository import LessonRepository
+from app.repositories.subject_repository import SubjectRepository
+from app.repositories.analytics_repository import AnalyticsRepository
+from app.services.insights_service import InsightsService
 from app.vectorstore.lesson_store import lesson_store
 from app.core.exceptions import AIGenerationError, NotFoundError
 from app.schemas.lesson import LessonResponse
@@ -209,7 +212,7 @@ class LessonService:
         self, lesson_id: str, user_id: str, db: AsyncSession
     ) -> None:
         repo = LessonRepository(db)
-        lesson = await repo.get_by_id(lesson_id)
+        lesson = await repo.get_by_id_with_module(lesson_id)
         if not lesson:
             raise NotFoundError("Lesson not found")
 
@@ -221,6 +224,25 @@ class LessonService:
             next_module = await course_repo.get_next_module(module_id)
             if next_module and getattr(next_module, "is_locked", True):
                 await course_repo.unlock_module(next_module.id)
+
+        # Update subject progress after lesson completion.
+        subject_repo = SubjectRepository(db)
+        subject_id = None
+        module = getattr(lesson, "module", None)
+        if module is not None:
+            course = getattr(module, "course", None)
+            if course is not None:
+                subject_id = getattr(course, "subject_id", None)
+
+        if subject_id:
+            progress_pct = await AnalyticsRepository(db).compute_subject_progress(
+                user_id, subject_id
+            )
+            await subject_repo.upsert_progress(user_id, subject_id, progress_pct)
+
+        # Save snapshot for analytics history.
+        insights_service = InsightsService()
+        await insights_service.create_snapshot(user_id, db)
 
     async def get_next_lesson(
         self, user_id: str, current_lesson_id: str, db: AsyncSession

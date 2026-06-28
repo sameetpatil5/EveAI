@@ -61,10 +61,6 @@ export default function CoursePage() {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div />
-                <MarkCompleteButton lessonId={lesson.id} completed={lesson.completed} />
-              </div>
               <LessonContent lesson={lesson} />
             </div>
           )}

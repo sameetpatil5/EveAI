@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.quiz_repository import QuizRepository
 from app.repositories.subject_repository import SubjectRepository
+from app.services.insights_service import InsightsService
 from app.core.exceptions import NotFoundError
 from app.schemas.quiz import QuizResponse, QuizResultResponse
 from app.utils.helpers import generate_uuid
-from app.utils.logger import logger
 from app.utils.logger import logger
 
 
@@ -167,6 +167,10 @@ class QuizService:
                 "answers": [a.model_dump() for a in answers],
             }
         )
+
+        insights_service = InsightsService()
+        await insights_service.create_snapshot(user_id, db)
+
         return QuizResultResponse.model_validate(
             {
                 "quiz_id": quiz_id,

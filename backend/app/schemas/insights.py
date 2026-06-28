@@ -19,6 +19,13 @@ class DashboardInsightsResponse(BaseModel):
     today_lessons_completed: int
     today_lessons_total: int
     total_study_hours: float
+    total_estimated_study_hours: float
+    total_study_hours_this_week: float
+    total_study_hours_available_this_week: float
+    total_course_completion: float
+    total_lessons_completed: int
+    total_lessons_available: int
+    last_active_lesson_id: str | None = None
     avg_quiz_score: float
     quiz_completion_rate: float
     subject_progress: list[SubjectProgressItem]

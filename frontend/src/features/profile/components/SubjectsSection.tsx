@@ -43,13 +43,13 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
     return 'bg-[#d1fae5] text-[#10b981]'
   }
 
-  const getProgressColor = (priority: number) => {
-    if (priority >= 8) return '#f59e0b'
-    if (priority >= 5) return '#10b981'
+  const getProgressColor = (progress: number) => {
+    if (progress >= 80) return '#10b981'
+    if (progress >= 50) return '#f59e0b'
     return '#607afb'
   }
 
-  const getProgressWidth = (priority: number) => `${Math.min(100, 24 + priority * 4)}%`
+  const getProgressWidth = (progress: number) => `${Math.max(6, Math.min(100, progress))}%`
 
   return (
     <div className="h-full flex min-h-0 flex-1 flex-col rounded-[10px] border border-[#e9eaf2] bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
@@ -119,12 +119,17 @@ export default function SubjectsSection({ subjects }: { subjects: Profile['subje
                     )}
                   </td>
                   <td className="h-14 px-3 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="h-[6px] w-full max-w-[110px] overflow-hidden rounded-[3px] bg-[#e9eaf2]">
-                        <div className="h-full rounded-[3px]" style={{ width: getProgressWidth(subject.priority), backgroundColor: getProgressColor(subject.priority) }} />
-                      </div>
-                      <span className="text-[12px] text-[#94a3b8]">{Math.max(10, Math.min(99, 20 + subject.priority * 4))}%</span>
-                    </div>
+                    {(() => {
+                      const progress = Math.max(0, Math.min(100, subject.progress_percentage ?? 0))
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="h-[6px] w-full max-w-[110px] overflow-hidden rounded-[3px] bg-[#e9eaf2]">
+                            <div className="h-full rounded-[3px]" style={{ width: getProgressWidth(progress), backgroundColor: getProgressColor(progress) }} />
+                          </div>
+                          <span className="text-[12px] text-[#94a3b8]">{progress}%</span>
+                        </div>
+                      )
+                    })()}
                   </td>
                   <td className="h-14 px-3 py-3 text-[#475569]">
                     {editing ? (

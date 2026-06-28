@@ -12,6 +12,9 @@ export interface SubjectSummary {
   level: string
   priority: number
   progress_percentage: number
+  weekly_hours: number
+  completed_lessons: number
+  total_lessons: number
 }
 
 export interface ScheduleEntry {

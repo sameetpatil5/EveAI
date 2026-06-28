@@ -9,7 +9,7 @@ interface SubjectCardProps {
 
 export function SubjectCard({ subject }: SubjectCardProps) {
   const navigate = useNavigate()
-  const progress = Math.max(0, Math.min(100, subject.progress_percentage))
+  const progress = Math.max(0, Math.min(100, Math.round(subject.progress_percentage)))
   const hasCourse = Boolean(subject.course_id)
 
   return (

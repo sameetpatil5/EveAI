@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user_repository import UserRepository
 from app.repositories.subject_repository import SubjectRepository
+from app.repositories.analytics_repository import AnalyticsRepository
 from app.core.exceptions import NotFoundError
 from app.schemas.profile import ProfileOut
 
@@ -13,14 +14,43 @@ class ProfileService:
             raise NotFoundError("Profile not found")
         user = await user_repo.get_by_id(user_id)
         subject_repo = SubjectRepository(db)
+        analytics_repo = AnalyticsRepository(db)
         hobbies = await user_repo.get_hobbies(user_id)
         subjects = await subject_repo.get_all_by_user(user_id)
+
+        subject_items = []
+        for subject in subjects:
+            progress_pct = float(
+                getattr(subject.progress, "progress_percentage", 0.0) or 0.0
+            )
+            if progress_pct == 0.0:
+                progress_pct = await analytics_repo.compute_subject_progress(
+                    user_id, subject.id
+                )
+            subject_items.append(
+                {
+                    "id": subject.id,
+                    "name": subject.name,
+                    "priority": subject.priority,
+                    "weekly_hours": subject.weekly_hours,
+                    "goal": subject.goal,
+                    "progress_percentage": int(round(progress_pct)),
+                }
+            )
+
+        current_streak, _ = await analytics_repo.compute_streak(user_id)
+        total_lessons_completed = await analytics_repo.get_lessons_completed(user_id)
 
         out = {
             "user": {
                 "id": user.id,
                 "email": user.email,
                 "onboarding_complete": getattr(user, "onboarding_complete", False),
+                "member_since": (
+                    getattr(user, "created_at", None).isoformat()
+                    if getattr(user, "created_at", None)
+                    else None
+                ),
             },
             "profile": {
                 "academic_level": getattr(profile, "academic_level", None),
@@ -30,16 +60,9 @@ class ProfileService:
                 or [],
             },
             "hobbies": hobbies or [],
-            "subjects": [
-                {
-                    "id": subject.id,
-                    "name": subject.name,
-                    "priority": subject.priority,
-                    "weekly_hours": subject.weekly_hours,
-                    "goal": subject.goal,
-                }
-                for subject in subjects
-            ],
+            "current_streak": int(current_streak),
+            "total_lessons_completed": int(total_lessons_completed),
+            "subjects": subject_items,
         }
         return ProfileOut.model_validate(out)
 

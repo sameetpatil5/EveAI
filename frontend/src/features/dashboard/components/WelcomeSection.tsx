@@ -20,7 +20,7 @@ export function WelcomeSection({ name, stats }: WelcomeSectionProps) {
           </div>
           <div className="text-xl font-semibold text-[#0f172a]">Welcome back, {name}</div>
           <p className="max-w-2xl text-sm leading-5 text-[#475569]">
-            You have {scheduledLessons ?? '[3]'} lessons scheduled for today. You are on a {streak ?? '[12]'}-day streak.
+            You have {scheduledLessons ?? '[]'} lessons scheduled for today. You are on a {streak ?? '[]'}-day streak.
           </p>
         </div>
 

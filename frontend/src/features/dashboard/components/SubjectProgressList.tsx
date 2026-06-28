@@ -24,6 +24,7 @@ export function SubjectProgressList({ subjects, className }: SubjectProgressList
           </div>
         ) : (
           displaySubjects.map((subject, index) => {
+            const progress = Math.max(0, Math.min(100, Math.round(subject.progress_percentage)))
             const barColor = progressColors[index % progressColors.length]
             return (
               <div key={subject.id} className="space-y-2.5">
@@ -31,14 +32,14 @@ export function SubjectProgressList({ subjects, className }: SubjectProgressList
                   <div>
                     <div className="text-sm font-semibold text-[#0f172a]">{subject.name}</div>
                   </div>
-                  <div className="text-sm font-semibold text-[#607afb]">{subject.progress_percentage}%</div>
+                  <div className="text-sm font-semibold text-[#607afb]">{progress}%</div>
                 </div>
                 <div className="h-2 rounded-full bg-[#e9eaf2] overflow-hidden">
-                  <div className="h-full rounded-full" style={{ width: `${subject.progress_percentage}%`, background: barColor }} />
+                  <div className="h-full rounded-full" style={{ width: `${progress}%`, background: barColor }} />
                 </div>
                 <div className="flex items-center justify-between text-xs text-[#94a3b8]">
-                  <span>{Math.ceil((subject.progress_percentage / 100) * 36)} of 36 lessons</span>
-                  <span>6h/week</span>
+                  <span>{subject.completed_lessons} of {subject.total_lessons} lessons</span>
+                  <span>{subject.weekly_hours}h/week</span>
                 </div>
               </div>
             )

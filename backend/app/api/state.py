@@ -8,6 +8,7 @@ from app.models.user import User
 from app.models.subject import Subject
 from app.repositories.user_repository import UserRepository
 from app.repositories.schedule_repository import ScheduleRepository
+from app.repositories.analytics_repository import AnalyticsRepository
 from app.services.profile_service import ProfileService
 from app.services.insights_service import InsightsService
 from app.schemas.common import success_response
@@ -43,17 +44,27 @@ async def get_state(
     )
     subjects = result.scalars().all()
     subjects_summary = []
+
+    # insights
+    analytics_repo = AnalyticsRepository(db)
+
     for s in subjects:
         progress_pct = 0.0
         if s.progress:
-            progress_pct = s.progress.progress_percentage
+            progress_pct = float(s.progress.progress_percentage or 0.0)
+        total_lessons, completed_lessons = (
+            await analytics_repo.get_subject_lesson_counts(user.id, s.id)
+        )
         subjects_summary.append(
             {
                 "id": s.id,
                 "name": s.name,
                 "level": s.level,
                 "priority": s.priority,
-                "progress_percentage": progress_pct,
+                "progress_percentage": int(round(progress_pct)),
+                "weekly_hours": int(round(s.weekly_hours or 0)),
+                "completed_lessons": int(completed_lessons),
+                "total_lessons": int(total_lessons),
             }
         )
 
@@ -75,6 +86,8 @@ async def get_state(
                 }
             )
 
+    analytics_repo = AnalyticsRepository(db)
+
     # stats
     insights = InsightsService()
     stats_obj = await insights.get_dashboard_insights(user.id, db)
@@ -86,8 +99,7 @@ async def get_state(
         "completion_rate": stats_obj.quiz_completion_rate,
     }
 
-    # last active lesson id (not tracked centrally yet) - return None
-    last_active_lesson_id = None
+    last_active_lesson_id = stats_obj.last_active_lesson_id
 
     result = {
         "user": user_info,

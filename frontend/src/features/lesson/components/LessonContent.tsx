@@ -11,7 +11,7 @@ interface LessonContentProps {
 export function LessonContent({ lesson }: LessonContentProps) {
   return (
     <article>
-      <LessonHeader title={lesson.title} completed={lesson.completed} />
+      <LessonHeader lessonId={lesson.id} title={lesson.title} completed={lesson.completed} />
 
       {lesson.content ? (
         <div className="prose prose-sm max-w-none text-sm text-[#0f172a]"><ReactMarkdown remarkPlugins={[remarkGfm]}>{lesson.content}</ReactMarkdown></div>

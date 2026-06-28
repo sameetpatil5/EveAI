@@ -7,10 +7,26 @@ interface StatsRowProps {
 
 export function StatsRow({ stats }: StatsRowProps) {
   const items = [
-    { label: 'Total Study Hours', value: '[84h]', detail: '[+6h this week]' },
-    { label: 'Lessons Completed', value: '[47]', detail: '[of 96 total]' },
-    { label: 'Current Streak', value: `${stats.current_streak}d`, detail: '[Best: 18 days]' },
-    { label: 'This Week', value: '[6h]', detail: '[Goal: 10h]' },
+    {
+      label: 'Today Lessons',
+      value: `${stats.today_lessons_count}`,
+      detail: 'Completed today',
+    },
+    {
+      label: 'Average Quiz',
+      value: `${stats.avg_quiz_score}%`,
+      detail: 'Average quiz score',
+    },
+    {
+      label: 'Current Streak',
+      value: `${stats.current_streak}d`,
+      detail: 'Days in a row',
+    },
+    {
+      label: 'Completion Rate',
+      value: `${stats.completion_rate}%`,
+      detail: 'Lessons completed',
+    },
   ]
 
   return (

@@ -25,7 +25,12 @@ export default function AccountSection({ profile }: { profile: Profile }) {
   const displayEmail = profile?.user?.email?.trim() || '[Email]'
   const displayAcademicLevel = academicLevel.trim() || '[Department]'
   const displayMajor = major.trim() || '[Major]'
-  const memberSince = '[January 2025]'
+  const memberSince = profile?.user?.member_since
+    ? new Date(profile.user.member_since).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+      })
+    : '[Member Since]'
 
   return (
     <div className="rounded-[10px] border border-[#e9eaf2] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">

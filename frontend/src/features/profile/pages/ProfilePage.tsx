@@ -60,8 +60,8 @@ export default function ProfilePage() {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join('') || 'JD'
-  const streakLabel = '[12-day streak]'
-  const lessonsLabel = '[47 lessons completed]'
+  const streakLabel = `${data.current_streak ?? 0}-day streak`
+  const lessonsLabel = `${data.total_lessons_completed ?? 0} lessons completed`
 
   return (
     <div className="h-full min-h-0 overflow-hidden bg-[#f8f9fc] px-0">
