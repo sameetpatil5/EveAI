@@ -34,7 +34,6 @@ export default function Navbar() {
                 src="/eveai_text.png"
                 alt="EveAI"
                 className="h-6 object-contain"
-                style={{ filter: 'brightness(0.88)' }}
               />
             </Link>
 
