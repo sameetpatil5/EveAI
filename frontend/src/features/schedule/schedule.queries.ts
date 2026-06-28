@@ -8,4 +8,10 @@ export const useUpdateStatusMutation = () =>
   useMutation({ mutationFn: ({ entryId, status }: { entryId: string; status: string }) => updateEntryStatus(entryId, status), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['schedule'] }) })
 
 export const useRegenerateScheduleMutation = () =>
-  useMutation({ mutationFn: (feedback: string) => regenerateSchedule(feedback), onSuccess: () => queryClient.invalidateQueries({ queryKey: ['schedule'] }) })
+  useMutation({
+    mutationFn: (feedback: string) => regenerateSchedule(feedback),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['schedule'] })
+      await queryClient.refetchQueries({ queryKey: ['schedule'] })
+    },
+  })

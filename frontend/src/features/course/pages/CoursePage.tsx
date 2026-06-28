@@ -4,7 +4,6 @@ import { useCourseStructureQuery } from '../course.queries'
 import { CourseGeneratingState } from '../components/CourseGeneratingState'
 import { useLessonQuery, useRetryLessonGenerationMutation } from '@/features/lesson/lesson.queries'
 import { LessonContent } from '@/features/lesson/components/LessonContent'
-import { MarkCompleteButton } from '@/features/lesson/components/MarkCompleteButton'
 import { useLearningStore } from '@/stores/learning.store'
 
 export default function CoursePage() {

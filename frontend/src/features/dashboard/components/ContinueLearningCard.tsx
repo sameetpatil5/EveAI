@@ -7,7 +7,7 @@ interface ContinueLearningCardProps {
 }
 
 export function ContinueLearningCard({ lastLessonId, className }: ContinueLearningCardProps) {
-  const lessonTitle = lastLessonId ? 'Resume your last lesson' : '[Last Lesson Title]'
+  const lessonTitle = lastLessonId ? 'Resume your last lesson' : 'Vist your first lesson'
 
   return (
     <Card className={`rounded-3xl p-5 ${className ?? ''}`}>

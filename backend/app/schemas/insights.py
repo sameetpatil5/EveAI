@@ -34,4 +34,5 @@ class DashboardInsightsResponse(BaseModel):
 
 class AIInsightsResponse(BaseModel):
     insights: list[str]
+    recommendations: list[str]
     generated_at: datetime

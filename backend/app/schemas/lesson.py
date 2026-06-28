@@ -1,5 +1,4 @@
 from typing import Optional
-from typing import Optional
 from pydantic import BaseModel
 
 
@@ -13,4 +12,5 @@ class LessonResponse(BaseModel):
     references: Optional[list]
     youtube_links: Optional[list]
     completed: bool
+    course_id: Optional[str] = None
     error_message: Optional[str] = None

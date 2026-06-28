@@ -42,6 +42,9 @@ export const useMarkCompleteMutation = () =>
       queryClient.invalidateQueries({ queryKey: ['lesson', lessonId] })
       queryClient.invalidateQueries({ queryKey: ['subjects'] })
       queryClient.invalidateQueries({ queryKey: ['course'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-state'] })
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
+      queryClient.invalidateQueries({ queryKey: ['insights'] })
     },
   })
 

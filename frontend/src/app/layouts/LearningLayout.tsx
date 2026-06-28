@@ -8,12 +8,15 @@ export default function LearningLayout() {
   const params = useParams()
   const setActiveCourseId = useLearningStore((s) => s.setActiveCourseId)
   const clearLearning = useLearningStore((s) => s.clearLearning)
+  const activeCourseId = useLearningStore((s) => s.activeCourseId)
 
   useEffect(() => {
     setActiveCourseId(params.courseId ?? null)
     return () => clearLearning()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.courseId])
+
+  const courseId = params.courseId ?? activeCourseId
 
   return (
     <div className="h-full min-h-0 flex flex-1 flex-col bg-[#f8f9fc] overflow-hidden">
@@ -23,7 +26,7 @@ export default function LearningLayout() {
         <div className="grid h-full min-h-0 grid-cols-[280px_minmax(0,1fr)_320px] gap-4 px-4">
           <aside className="hidden md:flex h-full min-h-0">
             <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-[#e9eaf2] bg-white">
-              <CourseSidebar courseId={params.courseId ?? ''} />
+              <CourseSidebar courseId={courseId ?? ''} />
             </div>
           </aside>
           <section className="h-full min-h-0 overflow-hidden">

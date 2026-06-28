@@ -17,9 +17,13 @@ class LessonService:
         self, lesson_id: str, user_id: str, db: AsyncSession
     ) -> tuple[LessonResponse, bool]:
         repo = LessonRepository(db)
-        lesson = await repo.get_by_id(lesson_id)
+        lesson = await repo.get_by_id_with_module(lesson_id)
         if not lesson:
             raise NotFoundError("Lesson not found")
+
+        module = getattr(lesson, "module", None)
+        course = getattr(module, "course", None) if module else None
+        course_id = getattr(course, "id", None)
 
         status = getattr(lesson, "generation_status", "pending")
         progress = await repo.get_progress(user_id, lesson_id)
@@ -40,6 +44,7 @@ class LessonService:
                         "references": getattr(lesson, "references", None),
                         "youtube_links": getattr(lesson, "youtube_links", None),
                         "completed": completed,
+                        "course_id": course_id,
                     }
                 ),
                 False,
@@ -59,6 +64,7 @@ class LessonService:
                         "references": None,
                         "youtube_links": None,
                         "completed": completed,
+                        "course_id": course_id,
                     }
                 ),
                 False,
@@ -77,6 +83,7 @@ class LessonService:
                         "references": getattr(lesson, "references", None),
                         "youtube_links": getattr(lesson, "youtube_links", None),
                         "completed": completed,
+                        "course_id": course_id,
                         "error_message": getattr(lesson, "error_message", None),
                     }
                 ),
@@ -100,6 +107,7 @@ class LessonService:
                     "references": None,
                     "youtube_links": None,
                     "completed": completed,
+                    "course_id": course_id,
                     "error_message": None,
                 }
             ),

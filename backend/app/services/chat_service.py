@@ -3,6 +3,7 @@ from app.repositories.lesson_repository import LessonRepository
 from app.repositories.user_repository import UserRepository
 from app.vectorstore.lesson_store import lesson_store
 from app.core.exceptions import NotFoundError
+from app.core.redis import get_json, set_json
 from app.schemas.chat import TutorChatResponse, QuickAskResponse
 from app.ai.base import get_llm
 from app.utils.helpers import generate_uuid
@@ -21,7 +22,7 @@ class ChatService:
     ) -> TutorChatResponse:
         # manage session id
         sid = session_id or generate_uuid()
-        history = await get_json(f"chat:{sid}") or []
+        history = await get_json(f"chat:{sid}", redis=redis) or []
 
         lesson_repo = LessonRepository(db)
         lesson = await lesson_repo.get_by_id_with_module(lesson_id)
@@ -55,7 +56,7 @@ class ChatService:
                 "ts": datetime.datetime.utcnow().isoformat(),
             }
         )
-        await set_json(f"chat:{sid}", history, ttl=7200)
+        await set_json(f"chat:{sid}", history, ttl=7200, redis=redis)
 
         # Note: chat DB persistence not implemented in repositories; skip DB save
         return TutorChatResponse.model_validate({"session_id": sid, "response": reply})

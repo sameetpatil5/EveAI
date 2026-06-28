@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useLessonQuery, useRetryLessonGenerationMutation } from '../lesson.queries'
 import type { Lesson } from '../lesson.types'
+import { useLearningStore } from '@/stores/learning.store'
 import { LessonGeneratingState } from '../components/LessonGeneratingState'
 import { LessonContent } from '../components/LessonContent'
 import { MarkCompleteButton } from '../components/MarkCompleteButton'
@@ -11,25 +12,18 @@ export default function LessonPage() {
   const { data, isLoading, isError, error } = useLessonQuery(lessonId ?? null)
   const retryLessonMutation = useRetryLessonGenerationMutation()
 
+  const setActiveLessonId = useLearningStore((s) => s.setActiveLessonId)
+  const setActiveCourseId = useLearningStore((s) => s.setActiveCourseId)
+
   useEffect(() => {
-    // If there's a learningStore, set active lesson here. Safe no-op otherwise.
-    ;(async () => {
-      try {
-        type LearningStore = { setActiveLesson?: (id: string | null) => void }
-        const learningStoreModule = await import('@/stores/learning.store')
-        const ls: LearningStore = (learningStoreModule as { default?: LearningStore }).default ?? (learningStoreModule as LearningStore)
-        if (ls && typeof ls.setActiveLesson === 'function') {
-          try {
-            ls.setActiveLesson(lessonId ?? null)
-          } catch {
-            // ignore runtime errors from store
-          }
-        }
-      } catch {
-        // ignore if store/module doesn't exist yet
-      }
-    })()
-  }, [lessonId])
+    setActiveLessonId(lessonId ?? null)
+  }, [lessonId, setActiveLessonId])
+
+  useEffect(() => {
+    if (data?.course_id) {
+      setActiveCourseId(data.course_id)
+    }
+  }, [data?.course_id, setActiveCourseId])
 
   if (!lessonId || lessonId === 'null' || lessonId === 'undefined') {
     return <div className="p-8 text-[#475569]">Invalid lesson selected.</div>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useScheduleQuery } from '../schedule.queries'
 import { useUpdateStatusMutation } from '../schedule.queries'
@@ -11,6 +11,11 @@ import type { ScheduleEntry } from '../schedule.types'
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const dayShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
+function getDayName(dateString: string) {
+  const d = new Date(dateString)
+  const dayIndex = (d.getUTCDay() + 6) % 7
+  return days[dayIndex]
+}
 
 function sortDayEntries(entries: ScheduleEntry[]) {
   return [...entries].sort(
@@ -19,7 +24,7 @@ function sortDayEntries(entries: ScheduleEntry[]) {
 }
 
 function formatTime(dateString: string) {
-  return new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  return new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })
 }
 
 function getStatusForEntry(entry: ScheduleEntry): string {
@@ -49,7 +54,7 @@ export default function SchedulePage() {
   const entriesByDay = useMemo(() => {
     const grouped: Record<string, ScheduleEntry[]> = {}
     entries.forEach((entry) => {
-      const dayName = new Date(entry.start_time).toLocaleDateString(undefined, { weekday: 'long' })
+      const dayName = getDayName(entry.start_time)
       grouped[dayName] = grouped[dayName] ? [...grouped[dayName], entry] : [entry]
     })
     Object.keys(grouped).forEach((day) => {
@@ -57,6 +62,18 @@ export default function SchedulePage() {
     })
     return grouped
   }, [entries])
+
+  const hasAutoSelectedDay = useRef(false)
+
+  useEffect(() => {
+    if (!entries.length || hasAutoSelectedDay.current) return
+    const currentDayHasEntries = (entriesByDay[days[selectedDayIdx]] ?? []).length > 0
+    if (!currentDayHasEntries) {
+      const fallbackDay = days.find((day) => (entriesByDay[day] ?? []).length > 0)
+      if (fallbackDay) setSelectedDayIdx(days.indexOf(fallbackDay))
+    }
+    hasAutoSelectedDay.current = true
+  }, [entries.length, entriesByDay])
 
   const currentDayEntries = entriesByDay[days[selectedDayIdx]] ?? []
 

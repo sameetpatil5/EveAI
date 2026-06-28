@@ -2,6 +2,7 @@ import { useMarkCompleteMutation } from '../lesson.queries'
 
 interface MarkCompleteButtonProps {
   lessonId: string
+  completed?: boolean
 }
 
 export function MarkCompleteButton({

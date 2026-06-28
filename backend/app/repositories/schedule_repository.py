@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete, update
-from datetime import datetime
 
 from app.models.schedule import Schedule
+from app.utils.helpers import utcnow
 
 
 class ScheduleRepository:
@@ -28,11 +28,12 @@ class ScheduleRepository:
         await self.db.commit()
 
     async def delete_pending_future_entries(self, user_id: str) -> None:
+        now = utcnow()
         await self.db.execute(
             delete(Schedule).where(
                 Schedule.user_id == user_id,
                 Schedule.status == "pending",
-                Schedule.start_time > datetime.utcnow(),
+                Schedule.start_time >= now,
             )
         )
         await self.db.commit()

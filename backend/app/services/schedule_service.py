@@ -31,8 +31,19 @@ class ScheduleService:
         entries = await repo.get_by_user(user_id)
         week_start = self._current_week_start()
         week_end = week_start + timedelta(days=7)
+
+        def _to_aware(dt: datetime) -> datetime:
+            """Ensure datetime is UTC-aware for comparison."""
+            if dt is None:
+                return dt
+            if dt.tzinfo is None:
+                return dt.replace(tzinfo=timezone.utc)
+            return dt
+
         current_week_entries = [
-            entry for entry in entries if week_start <= entry.start_time < week_end
+            entry
+            for entry in entries
+            if week_start <= _to_aware(entry.start_time) < week_end
         ]
         return ScheduleResponse.model_validate(
             {"entries": [e.__dict__ for e in current_week_entries]}
@@ -137,7 +148,7 @@ class ScheduleService:
 
     def _current_week_start(self) -> datetime:
         now = utcnow()
-        monday = now - timedelta(days=(now.weekday() % 7))
+        monday = now - timedelta(days=now.weekday())
         return datetime(
             monday.year,
             monday.month,
