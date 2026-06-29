@@ -1,77 +1,81 @@
 # EveAI Backend
 
-A personalized AI teaching assistant backend built with FastAPI and PostgreSQL.
+The backend for EveAI is a FastAPI service that powers onboarding, course generation, lessons, quizzes, scheduling, notes, and AI-assisted tutoring.
 
-## Features
+## Overview
 
-- JWT Authentication
-- User profiles with subjects, hobbies, and preferences
-- Dynamic schedule generation
-- AI tutoring integration (stub)
-- Progress tracking
-- Notes management
-- Quiz generation
-- Background tasks with APScheduler
+This service is responsible for:
 
-## Setup
+- Authenticating users and managing access
+- Storing and retrieving learning-related data
+- Orchestrating AI workflows for lesson and course generation
+- Managing background jobs for onboarding and content creation
+- Exposing REST APIs for the frontend experience
 
-1. Install dependencies:
+## Core technologies
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+- FastAPI
+- SQLAlchemy
+- Alembic
+- PostgreSQL
+- Redis
+- Qdrant
+- Google Gemini and LangChain
 
-2. Configure environment variables in `.env`:
+## Project structure
 
-   ```bash
-   DATABASE_URL=postgresql+asyncpg://user:password@localhost/eveai
-   SYNC_DATABASE_URL=postgresql://user:password@localhost/eveai
-   SECRET_KEY=your-secret-key-here
-   ```
+- app/api/ — API routes and request handling
+- app/services/ — business logic and orchestration
+- app/repositories/ — database access and persistence logic
+- app/models/ — SQLAlchemy models
+- app/schemas/ — request and response validation models
+- app/ai/ — AI agents, prompts, and schemas
+- app/core/ — configuration, security, and shared infrastructure
 
-3. Run database migrations:
+## Getting started
 
-   ```bash
-   alembic init alembic  # Only first time
-   alembic revision --autogenerate -m "Initial migration"
-   alembic upgrade head
-   ```
+### 1. Create a virtual environment
 
-4. Run the application:
+```bash
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
 
-   ```bash
-   python main.py
-   ```
+### 2. Install dependencies
 
-## API Documentation
+```bash
+pip install -r requirements.txt
+```
 
-Visit `http://localhost:8000/docs` for interactive API documentation.
+### 3. Configure environment variables
 
-## Project Structure
+Create a `.env` file in this folder with the required values for:
 
-- `/app/api` - API route handlers
-- `/app/core` - Core utilities (config, database, security)
-- `/app/models` - SQLAlchemy database models
-- `/app/schemas` - Pydantic validation schemas
-- `/app/services` - Business logic services
+- database connection strings
+- Redis URL
+- Qdrant URL and API key if needed
+- Gemini API keys and model names
+- JWT secret and algorithm settings
 
-## Key Endpoints
+### 4. Run database migrations
 
-- `POST /auth/signup` - Register new user
-- `POST /auth/login` - Login and get JWT token
-- `POST /user/onboard` - Save user profile
-- `POST /schedule/generate` - Generate study schedule
-- `GET /schedule/today` - Get today's schedule
-- `POST /ai/chat` - AI tutoring chat (stub)
-- `POST /progress/log` - Log learning progress
-- `GET /progress/summary` - Get progress statistics
-- `POST /notes/add` - Add a note
-- `GET /notes/list` - List all notes
+```bash
+alembic upgrade head
+```
 
-## Development
+### 5. Start the backend
 
-The AI integration is currently stubbed. Replace the functions in `/app/services/ai_service.py` with actual AI service calls (OpenAI, Anthropic, etc.).
+```bash
+python run.py
+```
 
-## License
+The API will be available at:
 
-MIT
+- http://localhost:8000
+- API docs: http://localhost:8000/docs
+
+## Development notes
+
+- The AI layer is organized around agents and prompts under the app/ai directory.
+- Background jobs are used for onboarding and content generation flows.
+- The API layer is intentionally thin and delegates most logic to services.
